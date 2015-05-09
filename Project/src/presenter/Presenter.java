@@ -1,15 +1,25 @@
 package presenter;
 
+import observe.Observable;
+import observe.Observer;
 import model.Model;
 import view.View;
 
-public class Presenter {
+public class Presenter implements Observer{
 	
 	Model m;
 	View v;
 	
 	public Presenter(View v, Model m) {
-		// TODO Auto-generated constructor stub
+		this.v = v;
+		this.m = m;
+		v.setCommands(new TestMVPCommand());
+	}
+
+	@Override
+	public void update(Observable o, Object obj) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
