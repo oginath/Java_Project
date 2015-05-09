@@ -18,6 +18,8 @@ public class MyModel implements Model, Observable {
 	@Override
 	public void generateMaze() {
 		System.out.println("Generating Maze....");
+		for (Observer observer : Observers)
+			observer.update(this, null);
 	}
 
 	@Override
@@ -56,7 +58,7 @@ public class MyModel implements Model, Observable {
 	@Override
 	public void notifyObservers() {
 		for (Observer observer : Observers)
-			observer.update(null, null);
+			observer.update(this, null);
 	}
 
 }

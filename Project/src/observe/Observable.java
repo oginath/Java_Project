@@ -6,7 +6,4 @@ public interface Observable {
 	public void deleteObserver(Observer o);
 	public void notifyObservers();
 
-
-
-
 }

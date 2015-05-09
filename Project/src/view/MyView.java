@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import observe.Observable;
 import observe.Observer;
-import presenter.Command;
+import presenter.Presenter.Command;
 import algorithms.mazeGenerators.Maze;
 import algorithms.solution.Solution;
 
@@ -22,6 +22,7 @@ public class MyView implements View, Observable {
 	@Override
 	public void start() {
 		System.out.println("Starting....");
+		this.notifyObservers();
 	}
 
 
@@ -45,7 +46,7 @@ public class MyView implements View, Observable {
 	@Override
 	public Command getUserCommand() {
 		System.out.println("Getting user command....");
-		return null;
+		return this.cmdList.get(0);
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public class MyView implements View, Observable {
 	@Override
 	public void notifyObservers() {
 		for (Observer observer : Observers)
-			observer.update(null, null);
+			observer.update(this, null);
 	}
 
 }

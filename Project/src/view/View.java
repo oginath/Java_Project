@@ -1,6 +1,6 @@
 package view;
 
-import presenter.Command;
+import presenter.Presenter.Command;
 import algorithms.mazeGenerators.Maze;
 import algorithms.solution.Solution;
 
