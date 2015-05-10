@@ -1,6 +1,9 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -14,16 +17,24 @@ import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.RecursiveBacktrackerMazeGenerator;
 import algorithms.search.BFS;
 import algorithms.search.Searcher;
+import algorithms.searchable.Searchable;
+import algorithms.searchable.SearchableMaze;
 import algorithms.solution.Solution;
 
 public class MyModel implements Model, Observable {
 
 	private ArrayList<Observer> Observers;
-	ExecutorService tp;
-
+	private HashMap<Maze, Solution> mTOs;
+	private ExecutorService tp;
+	private Queue<Maze> mQueue;
+	private Queue<Solution> sQueue;
+	
 	public MyModel() {
 		this.Observers = new ArrayList<Observer>();
-		tp = Executors.newFixedThreadPool(3);
+		this.mTOs = new HashMap<Maze, Solution>();
+		this.tp = Executors.newFixedThreadPool(3);
+		this.mQueue = new LinkedList<Maze>();
+		this.sQueue = new LinkedList<Solution>();
 	}
 
 	@Override
@@ -37,48 +48,58 @@ public class MyModel implements Model, Observable {
 				return m;
 			}
 		});
-		Maze m = null;
+		Maze maze = null;
 		try {
-			m = fm.get();
-		} catch (InterruptedException | ExecutionException e) {e.printStackTrace();}
-		if (m!= null)
+			maze = fm.get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+		if (maze != null)
+			mQueue.add(maze);
 			for (Observer observer : Observers)
 				observer.update(this, "maze");
 	}
 
 	@Override
 	public Maze getMaze() {
-		System.out.println("Getting Maze....");
-		return null;
+		return mQueue.poll();
 	}
 
 	@Override
 	public void solveMaze(Maze m) {
-		System.out.println("Solving Maze....");
-		Future<Solution> fs = tp.submit(new Callable<Solution>() {
-
-			@Override
-			public Solution call() throws Exception {
-
-				Searcher searcher = new BFS();
-				//Searchable s = new SearchableMaze(m, false);
-				//return searcher.search(s);
-				return new Solution();
-			}
-		});
 		Solution s = null;
-		try {
-			s = fs.get();
-		} catch (InterruptedException | ExecutionException e) {	e.printStackTrace();}
-		if (s!=null)
+		if (this.mTOs.containsKey(m)) { // TODO: maze HASHCODE & EQUALS
+			System.out.println("Solution to this maze already exists!");
+			s = this.mTOs.get(m);
+		} 
+		else {
+			System.out.println("Solving Maze....");
+			Future<Solution> fs = tp.submit(new Callable<Solution>() {
+				@Override
+				public Solution call() throws Exception {
+
+					Searcher searcher = new BFS();
+					Searchable s = new SearchableMaze(m, false);
+					return searcher.search(s);
+				}
+			});
+			try {
+				s = fs.get();
+			} catch (InterruptedException | ExecutionException e) {
+				e.printStackTrace();
+			}
+			this.mTOs.put(m, s);
+		}
+		if (s != null) {
+			sQueue.add(s);
 			for (Observer observer : Observers)
 				observer.update(this, "solution");
+		}
 	}
 
 	@Override
 	public Solution getSolution() {
-		System.out.println("Getting Solution....");
-		return null;
+		return sQueue.poll();
 	}
 
 	@Override
@@ -87,10 +108,13 @@ public class MyModel implements Model, Observable {
 		tp.shutdown();
 		try {
 			if (tp.awaitTermination(100, TimeUnit.MILLISECONDS))
-				System.out.println("Shutdown complete, termination peaceful...");
-			else 
+				System.out
+						.println("Shutdown complete, termination peaceful...");
+			else
 				System.out.println("Shutdown error?");
-		} catch (InterruptedException e) {e.printStackTrace();}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 	}
 
