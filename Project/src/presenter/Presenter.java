@@ -5,12 +5,13 @@ import observe.Observable;
 import observe.Observer;
 import view.View;
 import algorithms.mazeGenerators.Maze;
+import algorithms.solution.Solution;
 
-public class Presenter implements Observer{
-	
+public class Presenter implements Observer {
+
 	Model m;
 	View v;
-	
+
 	public Presenter(View v, Model m) {
 		this.v = v;
 		this.m = m;
@@ -20,20 +21,28 @@ public class Presenter implements Observer{
 
 	@Override
 	public void update(Observable o, Object obj) {
-		if(o == m){
-			Maze maze = m.getMaze();
-			v.displayMaze(maze);
-		}
-		
-		else if(o == v){
+		if (o == m) {
+			if (((String)(obj)).equals("maze")) {
+				Maze maze = m.getMaze();
+				v.displayMaze(maze);
+				m.solveMaze(maze);
+			}
+			else if (((String)(obj)).equals("solution")){
+				Solution sol = m.getSolution();
+				v.displaySolution(sol);
+			}
+		} 
+		else if (o == v) {
 			Command c = v.getUserCommand();
 			c.doCommand("");
+			c.doCommand("");
+			c.doCommand("");
 		}
-		
+
 	}
-	
+
 	// ##################### Commands:
-	
+
 	public interface Command {
 
 		void doCommand(String cmd);
@@ -48,6 +57,5 @@ public class Presenter implements Observer{
 		}
 
 	}
-	
-	
+
 }

@@ -14,7 +14,7 @@ public class Run {
 		v.addObserver(p);
 
 		v.start();
-		
+		m.stop();
 	}
 
 }
