@@ -1,14 +1,14 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-import observe.Observable;
-import observe.Observer;
 import presenter.Presenter.Command;
 import algorithms.mazeGenerators.Maze;
 import algorithms.solution.Solution;
 
-public class MyView implements View, Observable {
+public class MyView extends Observable implements View{
 
 	private ArrayList<Command> cmdList;
 	private ArrayList<Observer> Observers;

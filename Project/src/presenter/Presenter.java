@@ -1,8 +1,10 @@
 package presenter;
 
+
+import java.util.Observable;
+import java.util.Observer;
+
 import model.Model;
-import observe.Observable;
-import observe.Observer;
 import view.View;
 import algorithms.mazeGenerators.Maze;
 import algorithms.solution.Solution;

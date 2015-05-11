@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Queue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -11,8 +13,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import observe.Observable;
-import observe.Observer;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.RecursiveBacktrackerMazeGenerator;
 import algorithms.search.BFS;
@@ -21,7 +21,7 @@ import algorithms.searchable.Searchable;
 import algorithms.searchable.SearchableMaze;
 import algorithms.solution.Solution;
 
-public class MyModel implements Model, Observable {
+public class MyModel extends Observable implements Model {
 
 	private ArrayList<Observer> Observers;
 	private HashMap<Maze, Solution> mTOs;
