@@ -1,7 +1,7 @@
 package model;
 
 import algorithms.mazeGenerators.Maze;
-import algorithms.solution.Solution;
+import algorithms.search.Solution;
 
 public interface Model {
 

@@ -7,7 +7,7 @@ import java.util.Observer;
 import model.Model;
 import view.View;
 import algorithms.mazeGenerators.Maze;
-import algorithms.solution.Solution;
+import algorithms.search.Solution;
 
 public class Presenter implements Observer {
 

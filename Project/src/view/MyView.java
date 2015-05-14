@@ -6,7 +6,7 @@ import java.util.Observer;
 
 import presenter.Presenter.Command;
 import algorithms.mazeGenerators.Maze;
-import algorithms.solution.Solution;
+import algorithms.search.Solution;
 
 public class MyView extends Observable implements View{
 

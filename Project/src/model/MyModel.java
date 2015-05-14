@@ -16,10 +16,10 @@ import java.util.concurrent.TimeUnit;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.RecursiveBacktrackerMazeGenerator;
 import algorithms.search.BFS;
+import algorithms.search.Searchable;
+import algorithms.search.SearchableMaze;
 import algorithms.search.Searcher;
-import algorithms.searchable.Searchable;
-import algorithms.searchable.SearchableMaze;
-import algorithms.solution.Solution;
+import algorithms.search.Solution;
 
 public class MyModel extends Observable implements Model {
 
