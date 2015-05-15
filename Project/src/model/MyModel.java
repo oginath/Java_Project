@@ -14,8 +14,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import algorithms.mazeGenerators.Maze;
-import algorithms.mazeGenerators.RecursiveBacktrackerMazeGenerator;
-import algorithms.search.BFS;
+import algorithms.mazeGenerators.MazeGenerator;
 import algorithms.search.Searchable;
 import algorithms.search.SearchableMaze;
 import algorithms.search.Searcher;
@@ -28,13 +27,17 @@ public class MyModel extends Observable implements Model {
 	private ExecutorService tp;
 	private Queue<Maze> mQueue;
 	private DataManager dm;
+	private Searcher searcher;
+	private MazeGenerator mazeGen;
 	
-	public MyModel() {
+	public MyModel(Searcher s, MazeGenerator mg, int nOfThreads) {
 		this.Observers = new ArrayList<Observer>();
 		this.mTOs = new HashMap<Maze, ArrayList<Solution>>();
-		this.tp = Executors.newFixedThreadPool(3);
+		this.tp = Executors.newFixedThreadPool(nOfThreads);
 		this.mQueue = new LinkedList<Maze>();
 		this.dm = new DataManager();
+		this.searcher = s;
+		this.mazeGen = mg;
 	}
 
 	@Override
@@ -43,7 +46,7 @@ public class MyModel extends Observable implements Model {
 		Future<Maze> fm = tp.submit(new Callable<Maze>() {
 			@Override
 			public Maze call() throws Exception {
-				Maze m = new RecursiveBacktrackerMazeGenerator().generateMaze(
+				Maze m = mazeGen.generateMaze(
 						rows, cols);
 				return m;
 			}
@@ -80,7 +83,6 @@ public class MyModel extends Observable implements Model {
 				@Override
 				public Solution call() throws Exception {
 
-					Searcher searcher = new BFS();
 					Searchable s = new SearchableMaze(m, false);
 					return searcher.search(s);
 				}

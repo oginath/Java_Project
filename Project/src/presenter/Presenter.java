@@ -8,7 +8,6 @@ import java.util.Observer;
 import model.Model;
 import view.View;
 import algorithms.mazeGenerators.Maze;
-
 import commands.Command;
 
 public class Presenter implements Observer {
@@ -29,6 +28,14 @@ public class Presenter implements Observer {
 		v.setCommands("display maze", new displayMazeCommand());
 		v.setCommands("solve maze", new solveMazeCommand());
 		v.setCommands("display solution", new displaySolutionCommand());
+		v.setCommands("exit", new Command(){
+
+			@Override
+			public void doCommand(String cmd) {
+				System.out.println("exiting...");
+			}
+			
+		});
 	}
 
 	@Override

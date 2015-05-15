@@ -58,7 +58,6 @@ public class MyView extends Observable implements View {
 
 	@Override
 	public Command getUserCommand() {
-		System.out.println("Getting user command....");
 		return this.cmds.selectCommand(this.cli.getCmd());
 	}
 
@@ -75,7 +74,6 @@ public class MyView extends Observable implements View {
 	public void deleteObserver(Observer o) {
 		this.Observers.remove(o);
 	}
-
 	@Override
 	public void notifyObservers() {
 		for (Observer observer : Observers)
