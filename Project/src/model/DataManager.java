@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -20,13 +22,16 @@ public class DataManager {
 
 	HashMap<Cell, Integer> cellSet = null;
 	private Session session = null;
+	private SessionFactory sf = null;
 
 	public DataManager() {
+		Logger log = Logger.getLogger("org.hibernate");
+		log.setLevel(Level.SEVERE);
 		Configuration config = new Configuration();
 		config.configure();
 		ServiceRegistry sr = new StandardServiceRegistryBuilder()
 				.applySettings(config.getProperties()).build();
-		SessionFactory sf = config.configure().buildSessionFactory(sr);
+		sf = config.configure().buildSessionFactory(sr);
 		session = sf.openSession();
 	}
 
@@ -223,6 +228,11 @@ public class DataManager {
 		session.getTransaction().commit();
 	}
 	
+	public void shutdown(){
+		this.sf.close();
+	}
+	
 	// TODO 1: delete maze (and subsequential solutions)
 	// TODO 2: update maze (update solutions pretty much)
+	// TODO: Possible problem with deleting after loading
 }

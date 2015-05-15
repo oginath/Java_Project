@@ -24,27 +24,27 @@ import algorithms.search.Solution;
 public class MyModel extends Observable implements Model {
 
 	private ArrayList<Observer> Observers;
-	private HashMap<Maze, Solution> mTOs;
+	private HashMap<Maze, ArrayList<Solution>> mTOs; // Array of solutions because a maze can have more than one solutions, different algorithms etc
 	private ExecutorService tp;
 	private Queue<Maze> mQueue;
-	private Queue<Solution> sQueue;
+	private DataManager dm;
 	
 	public MyModel() {
 		this.Observers = new ArrayList<Observer>();
-		this.mTOs = new HashMap<Maze, Solution>();
+		this.mTOs = new HashMap<Maze, ArrayList<Solution>>();
 		this.tp = Executors.newFixedThreadPool(3);
 		this.mQueue = new LinkedList<Maze>();
-		this.sQueue = new LinkedList<Solution>();
+		this.dm = new DataManager();
 	}
 
 	@Override
-	public void generateMaze() {
+	public void generateMaze(int rows, int cols) {
 		System.out.println("Generating Maze....");
 		Future<Maze> fm = tp.submit(new Callable<Maze>() {
 			@Override
 			public Maze call() throws Exception {
 				Maze m = new RecursiveBacktrackerMazeGenerator().generateMaze(
-						10, 10);
+						rows, cols);
 				return m;
 			}
 		});
@@ -68,9 +68,11 @@ public class MyModel extends Observable implements Model {
 	@Override
 	public void solveMaze(Maze m) {
 		Solution s = null;
-		if (this.mTOs.containsKey(m)) { // TODO: maze HASHCODE & EQUALS
-			System.out.println("Solution to this maze already exists!");
-			s = this.mTOs.get(m);
+		if (this.mTOs.containsKey(m)) { 
+		//	v.display("Solution to this maze already exists!");
+			//get another?
+			
+			s = this.mTOs.get(m).get(0);
 		} 
 		else {
 			System.out.println("Solving Maze....");
@@ -88,24 +90,27 @@ public class MyModel extends Observable implements Model {
 			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
 			}
-			this.mTOs.put(m, s);
+		
 		}
 		if (s != null) {
-			sQueue.add(s);
+			ArrayList<Solution> l = new ArrayList<Solution>();
+			l.add(s);
+			this.mTOs.put(m, l);
 			for (Observer observer : Observers)
 				observer.update(this, "solution");
 		}
 	}
 
 	@Override
-	public Solution getSolution() {
-		return sQueue.poll();
+	public Solution getSolution(Maze mazeName) {
+		return this.mTOs.get(mazeName).get(0);
 	}
 
 	@Override
 	public void stop() {
 		System.out.println("Stoping....");
 		tp.shutdown();
+		dm.shutdown();
 		try {
 			if (tp.awaitTermination(100, TimeUnit.MILLISECONDS))
 				System.out
@@ -133,5 +138,17 @@ public class MyModel extends Observable implements Model {
 		for (Observer observer : Observers)
 			observer.update(this, null);
 	}
+	
+	public void saveMap(){
+		dm.saveMazeMap(mTOs);
+	}
+	
 
+	public HashMap<Maze, ArrayList<Solution>> loadMap(){
+		return dm.loadMazeMap();
+	}
+
+	public void deleteAllData(){
+		dm.deleteAll();
+	}
 }

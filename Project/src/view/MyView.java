@@ -1,52 +1,69 @@
 package view;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import presenter.Presenter.Command;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
+import commands.Command;
 
-public class MyView extends Observable implements View{
+public class MyView extends Observable implements View {
 
-	private ArrayList<Command> cmdList;
 	private ArrayList<Observer> Observers;
+	private MyCommands cmds;
+	private RunnableCLI cli;
+	Thread t;
 
 	public MyView() {
-		this.cmdList = new ArrayList<Command>();
 		this.Observers = new ArrayList<Observer>();
-
+		this.cmds = new MyCommands();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter pw = new PrintWriter(System.out);
+		this.cli = new RunnableCLI(br, pw);
 	}
-	
+
 	@Override
 	public void start() {
 		System.out.println("Starting....");
-		this.notifyObservers();
+		
+		do {
+			t = new Thread(cli);
+			t.start();
+			while(t.isAlive())
+				continue;
+			
+			notifyObservers();
+			
+		} while (this.cli.getCmd() != "exit");
 	}
-
 
 	@Override
 	public void displayMaze(Maze m) {
-		System.out.println("Displaying Maze....");
-
+		m.print();
 	}
 
 	@Override
 	public void displaySolution(Solution s) {
-		System.out.println("Displaying Soultion....");
-
+		s.print();
 	}
 
 	@Override
-	public void setCommands(Command cmd) {
-		this.cmdList.add(cmd);
+	public void setCommands(String cmdName, Command cmd) {
+		this.cmds.setCommands(cmdName, cmd);
 	}
 
 	@Override
 	public Command getUserCommand() {
 		System.out.println("Getting user command....");
-		return this.cmdList.get(0);
+		return this.cmds.selectCommand(this.cli.getCmd());
+	}
+
+	public String getUserArg() {
+		return this.cli.getArg();
 	}
 
 	@Override
