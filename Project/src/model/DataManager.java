@@ -19,12 +19,24 @@ import algorithms.mazeGenerators.Cell;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DataManager.
+ */
 public class DataManager {
 
+	/** The cell set. */
 	HashMap<Cell, Integer> cellSet = null;
+	
+	/** The session. */
 	private Session session = null;
+	
+	/** The sf. */
 	private SessionFactory sf = null;
 
+	/**
+	 * Instantiates a new data manager.
+	 */
 	public DataManager() {
 		Logger log = Logger.getLogger("org.hibernate");
 		log.setLevel(Level.SEVERE);
@@ -38,6 +50,11 @@ public class DataManager {
 		session = sf.openSession();
 	}
 
+	/**
+	 * Save maze map.
+	 *
+	 * @param map the map
+	 */
 	public void saveMazeMap(HashMap<Maze, ArrayList<Solution>> map) {
 
 		session.beginTransaction();
@@ -71,6 +88,11 @@ public class DataManager {
 		session.getTransaction().commit();
 	}
 
+	/**
+	 * Save maze.
+	 *
+	 * @param maze the maze
+	 */
 	private void saveMaze(Maze maze) {
 
 		if (cellSet == null) {
@@ -123,11 +145,21 @@ public class DataManager {
 		session.save(maze);
 	}
 
+	/**
+	 * Save solution.
+	 *
+	 * @param s the s
+	 */
 	private void saveSolution(Solution s) {
 
 		session.save(s);
 	}
 
+	/**
+	 * Load maze map.
+	 *
+	 * @return the hash map
+	 */
 	public HashMap<Maze, ArrayList<Solution>> loadMazeMap() {
 
 		HashMap<Maze, ArrayList<Solution>> map = new HashMap<Maze, ArrayList<Solution>>();
@@ -158,6 +190,12 @@ public class DataManager {
 		return map;
 	}
 
+	/**
+	 * Load maze.
+	 *
+	 * @param index the index
+	 * @return the maze
+	 */
 	private Maze loadMaze(int index) {
 
 		Query query = session.createQuery("FROM Maze where ID = " + index);
@@ -198,6 +236,12 @@ public class DataManager {
 		return m;
 	}
 
+	/**
+	 * Load solutions.
+	 *
+	 * @param mazeID the maze id
+	 * @return the array list
+	 */
 	private ArrayList<Solution> loadSolutions(int mazeID) {
 
 		Query query = this.session.createQuery("FROM Solution WHERE MazeID = "
@@ -215,6 +259,9 @@ public class DataManager {
 		return solutions;
 	}
 
+	/**
+	 * Delete all.
+	 */
 	public void deleteAll() {
 
 		session.beginTransaction();
@@ -231,6 +278,9 @@ public class DataManager {
 		session.getTransaction().commit();
 	}
 	
+	/**
+	 * Shutdown.
+	 */
 	public void shutdown(){
 		this.sf.close();
 	}

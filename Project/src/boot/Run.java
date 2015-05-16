@@ -5,8 +5,17 @@ import presenter.Preferences;
 import presenter.Presenter;
 import view.MyView;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Run.
+ */
 public class Run {
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		Preferences pref = new Preferences();
 		pref.loadPreferences();

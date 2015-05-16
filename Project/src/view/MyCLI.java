@@ -6,15 +6,33 @@ import java.io.PrintWriter;
 
 import commands.CLI;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MyCLI.
+ */
 public class MyCLI extends CLI {
 
+	/** The cmd. */
 	String cmd;
+	
+	/** The arg. */
 	String arg;
 
+	/**
+	 * Instantiates a new my cli.
+	 *
+	 * @param in the in
+	 * @param out the out
+	 */
 	public MyCLI(BufferedReader in, PrintWriter out) {
 		super(in, out);
 	}
 
+	/**
+	 * Gets the command.
+	 *
+	 * @return the command
+	 */
 	public void getCommand() {
 
 		this.cmd = null;
@@ -45,10 +63,20 @@ public class MyCLI extends CLI {
 		}
 	}
 
+	/**
+	 * Gets the cmd.
+	 *
+	 * @return the cmd
+	 */
 	public String getCmd() {
 		return this.cmd;
 	}
 
+	/**
+	 * Gets the arg.
+	 *
+	 * @return the arg
+	 */
 	public String getArg() {
 		return this.arg;
 	}

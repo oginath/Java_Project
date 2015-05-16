@@ -20,16 +20,40 @@ import algorithms.search.SearchableMaze;
 import algorithms.search.Searcher;
 import algorithms.search.Solution;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MyModel.
+ */
 public class MyModel extends Observable implements Model {
 
+	/** The Observers. */
 	private ArrayList<Observer> Observers;
+	
+	/** The m t os. */
 	private HashMap<Maze, ArrayList<Solution>> mTOs; // Array of solutions because a maze can have more than one solutions, different algorithms etc
+	
+	/** The tp. */
 	private ExecutorService tp;
+	
+	/** The m queue. */
 	private Queue<Maze> mQueue;
+	
+	/** The dm. */
 	private DataManager dm;
+	
+	/** The searcher. */
 	private Searcher searcher;
+	
+	/** The maze gen. */
 	private MazeGenerator mazeGen;
 	
+	/**
+	 * Instantiates a new my model.
+	 *
+	 * @param s the s
+	 * @param mg the mg
+	 * @param nOfThreads the n of threads
+	 */
 	public MyModel(Searcher s, MazeGenerator mg, int nOfThreads) {
 		this.Observers = new ArrayList<Observer>();
 		this.mTOs = new HashMap<Maze, ArrayList<Solution>>();
@@ -40,6 +64,9 @@ public class MyModel extends Observable implements Model {
 		this.mazeGen = mg;
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#generateMaze(int, int)
+	 */
 	@Override
 	public void generateMaze(int rows, int cols) {
 		System.out.println("Generating Maze....");
@@ -63,11 +90,17 @@ public class MyModel extends Observable implements Model {
 				observer.update(this, "maze");
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#getMaze()
+	 */
 	@Override
 	public Maze getMaze() {
 		return mQueue.poll();
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#solveMaze(algorithms.mazeGenerators.Maze)
+	 */
 	@Override
 	public void solveMaze(Maze m) {
 		Solution s = null;
@@ -103,11 +136,17 @@ public class MyModel extends Observable implements Model {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#getSolution(algorithms.mazeGenerators.Maze)
+	 */
 	@Override
 	public Solution getSolution(Maze mazeName) {
 		return this.mTOs.get(mazeName).get(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#stop()
+	 */
 	@Override
 	public void stop() {
 		tp.shutdown();
@@ -124,31 +163,51 @@ public class MyModel extends Observable implements Model {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Observable#addObserver(java.util.Observer)
+	 */
 	@Override
 	public void addObserver(Observer o) {
 		this.Observers.add(o);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Observable#deleteObserver(java.util.Observer)
+	 */
 	@Override
 	public void deleteObserver(Observer o) {
 		this.Observers.remove(o);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Observable#notifyObservers()
+	 */
 	@Override
 	public void notifyObservers() {
 		for (Observer observer : Observers)
 			observer.update(this, null);
 	}
 	
+	/**
+	 * Save map.
+	 */
 	public void saveMap(){
 		dm.saveMazeMap(mTOs);
 	}
 	
 
+	/**
+	 * Load map.
+	 *
+	 * @return the hash map
+	 */
 	public HashMap<Maze, ArrayList<Solution>> loadMap(){
 		return dm.loadMazeMap();
 	}
 
+	/**
+	 * Delete all data.
+	 */
 	public void deleteAllData(){
 		dm.deleteAll();
 	}

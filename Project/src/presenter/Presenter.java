@@ -10,14 +10,30 @@ import view.View;
 import algorithms.mazeGenerators.Maze;
 import commands.Command;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Presenter.
+ */
 public class Presenter implements Observer {
 
+	/** The m. */
 	Model m;
+	
+	/** The v. */
 	View v;
 
+	/** The n t om. */
 	HashMap<String, Maze> nTOm;
+	
+	/** The nlist. */
 	LinkedList<String> nlist;
 
+	/**
+	 * Instantiates a new presenter.
+	 *
+	 * @param v the v
+	 * @param m the m
+	 */
 	public Presenter(View v, Model m) {
 		this.v = v;
 		this.m = m;
@@ -52,6 +68,9 @@ public class Presenter implements Observer {
 		});
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
 	@Override
 	public void update(Observable o, Object obj) {
 		if (o == m) {
@@ -74,8 +93,14 @@ public class Presenter implements Observer {
 
 	// ##################### Commands:
 
+	/**
+	 * The Class generateMazeCommand.
+	 */
 	public class generateMazeCommand implements Command {
 
+		/* (non-Javadoc)
+		 * @see commands.Command#doCommand(java.lang.String)
+		 */
 		@Override
 		public void doCommand(String arg) {
 			String[] args = arg.split(" ");
@@ -95,8 +120,14 @@ public class Presenter implements Observer {
 		}
 	}
 
+	/**
+	 * The Class displayMazeCommand.
+	 */
 	public class displayMazeCommand implements Command {
 
+		/* (non-Javadoc)
+		 * @see commands.Command#doCommand(java.lang.String)
+		 */
 		@Override
 		public void doCommand(String mName) {
 			String[] s = mName.split(" ");
@@ -105,8 +136,14 @@ public class Presenter implements Observer {
 		}
 	}
 
+	/**
+	 * The Class solveMazeCommand.
+	 */
 	public class solveMazeCommand implements Command {
 
+		/* (non-Javadoc)
+		 * @see commands.Command#doCommand(java.lang.String)
+		 */
 		@Override
 		public void doCommand(String mName) {
 			String[] s = mName.split(" ");
@@ -114,8 +151,14 @@ public class Presenter implements Observer {
 		}
 	}
 
+	/**
+	 * The Class displaySolutionCommand.
+	 */
 	public class displaySolutionCommand implements Command {
 
+		/* (non-Javadoc)
+		 * @see commands.Command#doCommand(java.lang.String)
+		 */
 		@Override
 		public void doCommand(String mName) {
 			String[] s = mName.split(" ");
