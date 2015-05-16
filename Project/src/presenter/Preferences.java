@@ -19,7 +19,6 @@ public class Preferences implements Serializable {
 	
 	//public int rows, cols; // default maze size
 	//public boolean isDiagonal; // default maze diagonal binary
-	//public Heuristic hue; // default heuristic in case of A*
 	
 	public Preferences() {
 		
@@ -46,7 +45,7 @@ public class Preferences implements Serializable {
 	
 	public void loadPreferences(){
 		try {
-			XMLDecoder xmlDe = new XMLDecoder(new FileInputStream("preferences.xml"));
+			XMLDecoder xmlDe = new XMLDecoder(new FileInputStream("resources/preferences.xml"));
 			Preferences p  = (Preferences) xmlDe.readObject();
 			xmlDe.close();
 			
@@ -61,7 +60,7 @@ public class Preferences implements Serializable {
 	
 	public void savePreferences(){
 		try {
-			XMLEncoder xmlEn = new XMLEncoder(new FileOutputStream("preferences.xml"));
+			XMLEncoder xmlEn = new XMLEncoder(new FileOutputStream("resources/preferences.xml"));
 			xmlEn.writeObject(this);
 			xmlEn.close();
 		} catch (FileNotFoundException e) {

@@ -28,7 +28,7 @@ public class MyView extends Observable implements View {
 
 	@Override
 	public void start() {
-		System.out.println("Starting....");
+		System.out.println("Type \"list\" for cmd list");
 		
 		do {
 			t = new Thread(cli);

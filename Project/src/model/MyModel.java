@@ -110,13 +110,12 @@ public class MyModel extends Observable implements Model {
 
 	@Override
 	public void stop() {
-		System.out.println("Stoping....");
 		tp.shutdown();
 		dm.shutdown();
 		try {
 			if (tp.awaitTermination(100, TimeUnit.MILLISECONDS))
 				System.out
-						.println("Shutdown complete, termination peaceful...");
+						.println("Exit complete");
 			else
 				System.out.println("Shutdown error?");
 		} catch (InterruptedException e) {

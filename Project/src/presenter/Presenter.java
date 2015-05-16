@@ -36,6 +36,20 @@ public class Presenter implements Observer {
 			}
 			
 		});
+		v.setCommands("list", new Command(){
+
+			@Override
+			public void doCommand(String cmd) {
+				System.out.println("\nList of commands:");
+				System.out.println("generate maze    <name> <x> <y> ---- generate maze with the specified name, x rows y columns");
+				System.out.println("display maze     <name>         ---- display the maze with the specified name");
+				System.out.println("solve maze       <name>         ---- solve the maze with the specified name");
+				System.out.println("display solution <name>         ---- display the solution for the maze with the specified name");
+				System.out.println("exit");
+				
+			}
+			
+		});
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,8 +28,10 @@ public class DataManager {
 	public DataManager() {
 		Logger log = Logger.getLogger("org.hibernate");
 		log.setLevel(Level.SEVERE);
+		String filePath = "resources/hibernate.cfg.xml";
+		File f = new File(filePath);
 		Configuration config = new Configuration();
-		config.configure();
+		config.configure(f);
 		ServiceRegistry sr = new StandardServiceRegistryBuilder()
 				.applySettings(config.getProperties()).build();
 		sf = config.configure().buildSessionFactory(sr);
