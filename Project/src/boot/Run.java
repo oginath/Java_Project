@@ -1,5 +1,9 @@
 package boot;
 
+//
+//	By: Or Ginath & Dor hivert
+//      205928161    301680948
+
 import model.MyModel;
 import presenter.Preferences;
 import presenter.Presenter;
@@ -24,7 +28,7 @@ public class Run {
 		Presenter p = new Presenter(v,m);
 		m.addObserver(p);
 		v.addObserver(p);
-
+	
 		v.start();
 		m.stop();
 	}
