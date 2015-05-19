@@ -30,7 +30,9 @@ public class MyModel extends Observable implements Model {
 	private ArrayList<Observer> Observers;
 	
 	/** The m t os. */
-	private HashMap<Maze, ArrayList<Solution>> mTOs; // Array of solutions because a maze can have more than one solutions, different algorithms etc
+	private HashMap<Maze, ArrayList<Solution>> mTOs; // Array of solutions because a maze can have more than one solution, different algorithms etc
+	
+	private HashMap<String, Maze> nTOm;
 	
 	/** The tp. */
 	private ExecutorService tp;
@@ -55,11 +57,18 @@ public class MyModel extends Observable implements Model {
 	 * @param nOfThreads the n of threads
 	 */
 	public MyModel(Searcher s, MazeGenerator mg, int nOfThreads) {
+		this.dm = new DataManager();
+		this.mTOs = this.loadMap();
+		this.nTOm = new HashMap<String, Maze>();
+		if(this.mTOs == null)
+			this.mTOs = new HashMap<Maze, ArrayList<Solution>>();
+		else {
+			for (Maze m : mTOs.keySet())
+				nTOm.put(m.getName(), m);
+		}
 		this.Observers = new ArrayList<Observer>();
-		this.mTOs = new HashMap<Maze, ArrayList<Solution>>();
 		this.tp = Executors.newFixedThreadPool(nOfThreads);
 		this.mQueue = new LinkedList<Maze>();
-		this.dm = new DataManager();
 		this.searcher = s;
 		this.mazeGen = mg;
 	}
@@ -150,6 +159,7 @@ public class MyModel extends Observable implements Model {
 	@Override
 	public void stop() {
 		tp.shutdown();
+		this.saveMap();
 		dm.shutdown();
 		try {
 			if (tp.awaitTermination(100, TimeUnit.MILLISECONDS))
@@ -161,6 +171,10 @@ public class MyModel extends Observable implements Model {
 			e.printStackTrace();
 		}
 
+	}
+
+	public HashMap<String, Maze> getNtoM() {
+		return nTOm;
 	}
 
 	/* (non-Javadoc)

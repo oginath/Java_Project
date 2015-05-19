@@ -1,6 +1,5 @@
 package presenter;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -8,6 +7,7 @@ import java.util.Observer;
 import model.Model;
 import view.View;
 import algorithms.mazeGenerators.Maze;
+
 import commands.Command;
 
 // TODO: Auto-generated Javadoc
@@ -23,7 +23,7 @@ public class Presenter implements Observer {
 	View v;
 
 	/** The n t om. */
-	HashMap<String, Maze> nTOm;
+	//HashMap<String, Maze> nTOm;
 	
 	/** The nlist. */
 	LinkedList<String> nlist;
@@ -37,7 +37,7 @@ public class Presenter implements Observer {
 	public Presenter(View v, Model m) {
 		this.v = v;
 		this.m = m;
-		this.nTOm = new HashMap<String, Maze>();
+		//this.nTOm = new HashMap<String, Maze>();
 		this.nlist = new LinkedList<String>();
 
 		v.setCommands("generate maze", new generateMazeCommand());
@@ -76,7 +76,8 @@ public class Presenter implements Observer {
 		if (o == m) {
 			if (((String) (obj)).equals("maze")) {
 				Maze maze = m.getMaze();
-				this.nTOm.put(this.nlist.poll(), maze);
+				maze.setName(this.nlist.poll());
+				this.m.getNtoM().put(maze.getName(), maze);
 				System.out.println("Maze is ready!");
 			} else if (((String) (obj)).equals("solution")) {
 				System.out.println("Solution is ready!");
@@ -105,7 +106,7 @@ public class Presenter implements Observer {
 		public void doCommand(String arg) {
 			String[] args = arg.split(" ");
 			if (args.length == 3) {
-				if(nTOm.containsKey(args[0])){
+				if(m.getNtoM().containsKey(args[0])){
 					System.out.println("Maze with this name already exists!");
 					return;
 				}
@@ -131,7 +132,7 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand(String mName) {
 			String[] s = mName.split(" ");
-			Maze maze = nTOm.get(s[0]);
+			Maze maze =	m.getNtoM().get(s[0]);
 			v.displayMaze(maze);
 		}
 	}
@@ -147,7 +148,7 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand(String mName) {
 			String[] s = mName.split(" ");
-			m.solveMaze(nTOm.get(s[0]));
+			m.solveMaze(m.getNtoM().get(s[0]));
 		}
 	}
 
@@ -162,7 +163,7 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand(String mName) {
 			String[] s = mName.split(" ");
-			v.displaySolution(m.getSolution(nTOm.get(s[0])));
+			v.displaySolution(m.getSolution(m.getNtoM().get(s[0])));
 		}
 	}
 

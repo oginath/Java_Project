@@ -1,5 +1,7 @@
 package model;
 
+import java.util.HashMap;
+
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 
@@ -30,6 +32,8 @@ public interface Model {
 	 *
 	 * @param m the m
 	 */
+	HashMap<String, Maze> getNtoM();
+	
 	void solveMaze(Maze m);
 	
 	/**

@@ -26,13 +26,15 @@ import algorithms.search.Solution;
 public class DataManager {
 
 	/** The cell set. */
-	HashMap<Cell, Integer> cellSet = null;
-	
+	private HashMap<Cell, Integer> cellSet = null;
+
 	/** The session. */
 	private Session session = null;
-	
+
 	/** The sf. */
 	private SessionFactory sf = null;
+
+	private HashMap<Maze, ArrayList<Solution>> map;
 
 	/**
 	 * Instantiates a new data manager.
@@ -53,7 +55,8 @@ public class DataManager {
 	/**
 	 * Save maze map.
 	 *
-	 * @param map the map
+	 * @param map
+	 *            the map
 	 */
 	public void saveMazeMap(HashMap<Maze, ArrayList<Solution>> map) {
 
@@ -63,35 +66,37 @@ public class DataManager {
 
 			this.saveMaze(maze);
 
-			Query query = session
-					.createQuery("FROM Solution Order by solID desc");
-			@SuppressWarnings("unchecked")
-			List<Solution> soList = query.list();
-			Iterator<Solution> soIt = soList.iterator();
+//			Query query = session
+//					.createQuery("FROM Solution Order by solID desc");
+//			@SuppressWarnings("unchecked")
+//			List<Solution> soList = query.list();
+//			Iterator<Solution> soIt = soList.iterator();
+//
+//			int i = 0;
+//			if (soIt.hasNext()) {
+//				sol = soIt.next();
+//				i = sol.getSolID();
+//			}
 
 			Solution sol = null;
-			int i = 0;
-			if (soIt.hasNext()) {
-				sol = soIt.next();
-				i = sol.getSolID();
-			}
-
 			Iterator<Solution> it = map.get(maze).iterator();
 			sol = null;
 			while (it.hasNext()) {
 				sol = it.next();
 				sol.setMazeID(maze.getID());
-				sol.setSolID(++i);
+				//sol.setSolID(++i);
 				this.saveSolution(sol);
 			}
 		}
+
 		session.getTransaction().commit();
 	}
 
 	/**
 	 * Save maze.
 	 *
-	 * @param maze the maze
+	 * @param maze
+	 *            the maze
 	 */
 	private void saveMaze(Maze maze) {
 
@@ -110,20 +115,20 @@ public class DataManager {
 			}
 		}
 
-		Query query = session.createQuery("FROM Maze Order by ID desc");
-
-		@SuppressWarnings("unchecked")
-		List<Maze> idList = query.list();
-		Iterator<Maze> idIt = idList.iterator();
-
-		Integer x = null;
-		Maze tempMaze = null;
-		if (idIt.hasNext()) {
-			tempMaze = idIt.next();
-			x = tempMaze.getID() + 1;
-			maze.setID(x);
-		} else
-			maze.setID(1);
+//		Query query = session.createQuery("FROM Maze Order by ID desc");
+//
+//		@SuppressWarnings("unchecked")
+//		List<Maze> idList = query.list();
+//		Iterator<Maze> idIt = idList.iterator();
+//
+//		Integer x = null;
+//		Maze tempMaze = null;
+//		if (idIt.hasNext()) {
+//			tempMaze = idIt.next();
+//			x = tempMaze.getID() + 1;
+//			maze.setID(x);
+//		} else
+//			maze.setID(1);
 
 		maze.setMatrixArray(new byte[maze.getRows() * maze.getCols()]);
 
@@ -141,18 +146,19 @@ public class DataManager {
 			}
 
 		for (Cell cell : cellSet.keySet())
-			session.save(cell);
-		session.save(maze);
+			session.saveOrUpdate(cell);
+		session.saveOrUpdate(maze);
 	}
 
 	/**
 	 * Save solution.
 	 *
-	 * @param s the s
+	 * @param s
+	 *            the s
 	 */
 	private void saveSolution(Solution s) {
 
-		session.save(s);
+		session.saveOrUpdate(s);
 	}
 
 	/**
@@ -162,7 +168,7 @@ public class DataManager {
 	 */
 	public HashMap<Maze, ArrayList<Solution>> loadMazeMap() {
 
-		HashMap<Maze, ArrayList<Solution>> map = new HashMap<Maze, ArrayList<Solution>>();
+		map = new HashMap<Maze, ArrayList<Solution>>();
 
 		Query query = session.createQuery("FROM Maze Order by ID desc");
 
@@ -193,7 +199,8 @@ public class DataManager {
 	/**
 	 * Load maze.
 	 *
-	 * @param index the index
+	 * @param index
+	 *            the index
 	 * @return the maze
 	 */
 	private Maze loadMaze(int index) {
@@ -231,7 +238,7 @@ public class DataManager {
 			}
 
 		m.setMatrix(matrix);
-		m.setMatrixArray(null);
+		// m.setMatrixArray(null);
 
 		return m;
 	}
@@ -239,7 +246,8 @@ public class DataManager {
 	/**
 	 * Load solutions.
 	 *
-	 * @param mazeID the maze id
+	 * @param mazeID
+	 *            the maze id
 	 * @return the array list
 	 */
 	private ArrayList<Solution> loadSolutions(int mazeID) {
@@ -265,26 +273,26 @@ public class DataManager {
 	public void deleteAll() {
 
 		session.beginTransaction();
-		HashMap<Maze, ArrayList<Solution>> map = this.loadMazeMap();
 		for (Maze maze : map.keySet()) {
-			@SuppressWarnings("rawtypes")
-			Iterator it = map.get(maze).iterator();
+
+			Iterator<Solution> it = map.get(maze).iterator();
 			while (it.hasNext()) {
-				session.delete(it.next());
+				Solution s = it.next();
+				session.delete(s);
 			}
 
 			session.delete(maze);
 		}
 		session.getTransaction().commit();
 	}
-	
+
 	/**
 	 * Shutdown.
 	 */
-	public void shutdown(){
+	public void shutdown() {
 		this.sf.close();
 	}
-	
+
 	// TODO 1: delete maze (and subsequential solutions)
 	// TODO 2: update maze (update solutions pretty much)
 	// TODO: Possible problem with deleting after loading
