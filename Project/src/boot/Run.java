@@ -5,9 +5,10 @@ package boot;
 //      
 
 import model.MyModel;
-import presenter.Preferences;
 import presenter.Presenter;
-import view.CLIView;
+import presenter.Preferences;
+import view.CLI.CLIView;
+import view.SWT.GUI;
 
 /**
  * The Class Run.
@@ -18,7 +19,7 @@ public class Run {
 		Preferences pref = new Preferences();
 		pref.loadPreferences();
 		MyModel m = new MyModel(pref.getSolverAlg(), pref.getGeneratorAlg(), pref.getNumOfThreads());
-		CLIView v = new CLIView();
+		GUI v = new GUI();
 		Presenter p = new Presenter(v,m);
 		m.addObserver(p);
 		v.addObserver(p);

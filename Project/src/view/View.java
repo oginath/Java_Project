@@ -34,7 +34,7 @@ public interface View {
 	 *
 	 * @return The user command
 	 */
-	Command getUserCommand();
+	Command getUserCommand(String command);
 	
 	/**
 	 * Gets the user argument.
@@ -43,7 +43,7 @@ public interface View {
 	 *
 	 * @return The user argument
 	 */
-	String getUserArg();
+	String getUserArg(String arg);
 	
 	/**
 	 * Display maze.
@@ -60,4 +60,5 @@ public interface View {
 	 * @param s The solution to be displayed.
 	 */
 	void displaySolution(Solution s);
+	
 }

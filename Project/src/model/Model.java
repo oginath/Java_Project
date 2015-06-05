@@ -3,6 +3,7 @@ package model;
 import java.util.HashMap;
 
 import algorithms.mazeGenerators.Maze;
+import algorithms.search.SearchableMaze;
 import algorithms.search.Solution;
 
 /**
@@ -48,7 +49,7 @@ public interface Model {
 	 * @param m
 	 *            the maze
 	 */
-	void solveMaze(Maze m);
+	void solveMaze(SearchableMaze sm);
 
 	/**
 	 * Gets the solution.

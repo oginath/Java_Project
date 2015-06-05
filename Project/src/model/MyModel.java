@@ -137,31 +137,30 @@ public class MyModel extends Observable implements Model {
 	 *            the maze to be solved.
 	 */
 	@Override
-	public void solveMaze(Maze m) {
+	public void solveMaze(SearchableMaze sm) {
+		Maze m = sm.getMaze();
 		Solution s = null;
-		if (this.mTOs.containsKey(m)) {
-			s = this.mTOs.get(m).get(0);
-		} else {
-			System.out.println("Solving Maze....");
-			Future<Solution> fs = tp.submit(new Callable<Solution>() {
-				@Override
-				public Solution call() throws Exception {
 
-					Searchable s = new SearchableMaze(m, false);
-					return searcher.search(s);
-				}
-			});
-			try {
-				s = fs.get();
-			} catch (InterruptedException | ExecutionException e) {
-				e.printStackTrace();
+		System.out.println("Solving Maze....");
+		Future<Solution> fs = tp.submit(new Callable<Solution>() {
+			@Override
+			public Solution call() throws Exception {
+				return searcher.search(sm);
 			}
-
+		});
+		try {
+			s = fs.get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
 		}
+
 		if (s != null) {
-			ArrayList<Solution> l = new ArrayList<Solution>();
-			l.add(s);
-			this.mTOs.put(m, l);
+			ArrayList<Solution> sols = mTOs.get(m);
+			if(sols == null)
+				sols = new ArrayList<Solution>();
+			sols.add(s);
+			this.mTOs.remove(m);
+			this.mTOs.put(m, sols);
 			for (Observer observer : Observers)
 				observer.update(this, "solution");
 		}
@@ -176,7 +175,8 @@ public class MyModel extends Observable implements Model {
 	 */
 	@Override
 	public Solution getSolution(Maze mazeName) {
-		return this.mTOs.get(mazeName).get(0);
+		ArrayList<Solution> array = mTOs.get(mazeName);
+		return array.get(array.size()-1);
 	}
 
 	/**

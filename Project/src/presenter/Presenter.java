@@ -7,7 +7,9 @@ import java.util.Observer;
 import model.Model;
 import view.View;
 import algorithms.mazeGenerators.Maze;
-
+import algorithms.search.MazeState;
+import algorithms.search.SearchableMaze;
+import algorithms.search.Solution;
 import commands.Command;
 
 /**
@@ -23,6 +25,9 @@ public class Presenter implements Observer {
 
 	/** The list of names. */
 	LinkedList<String> nlist;
+	
+	Maze latestMaze;
+
 
 	/**
 	 * Instantiates a new presenter.
@@ -82,18 +87,46 @@ public class Presenter implements Observer {
 	@Override
 	public void update(Observable o, Object obj) {
 		if (o == m) {
-			if (((String) (obj)).equals("maze")) {
+			if (((String)(obj)).equals("maze")) {
 				Maze maze = m.getMaze();
 				maze.setName(this.nlist.poll());
 				this.m.getNtoM().put(maze.getName(), maze);
 				// System.out.println("Maze is ready!");
+				latestMaze = maze;
+				v.displayMaze(maze);
 			} else if (((String) (obj)).equals("solution")) {
 				// System.out.println("Solution is ready!");
+				Solution s = m.getSolution(latestMaze);
+				v.displaySolution(s);
 			}
 		} else if (o == v) {
-			Command cmd = v.getUserCommand();
+			Command cmd;
+			String[] s = null;
+			if(obj != null){
+				s = ((String)(obj)).split(" ");
+				cmd = v.getUserCommand(s[0] + " " + s[1]);
+
+			}
+			else{
+			cmd = v.getUserCommand(null);
+			}
 			if (cmd != null) {
-				String arg = v.getUserArg();
+				String arg = null;
+				if(s!=null){
+					if(s[0].equals("generate"))
+						arg = s[2] + " " + s[3] + " " + s[4];
+					else if(s[0].equals("solve")){
+						arg = "";
+						for(int i = 0; i < 5; i++){
+							arg += s[i+2];
+							if(i == 4)
+								continue;
+							arg += " ";
+						}
+					}
+				}
+				else
+					arg = v.getUserArg(null);	
 				cmd.doCommand(arg);
 			}
 		}
@@ -173,7 +206,15 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand(String mName) {
 			String[] s = mName.split(" ");
-			m.solveMaze(m.getNtoM().get(s[0]));
+			Maze maze = m.getNtoM().get(s[0]);
+			SearchableMaze sm = new SearchableMaze(maze, false);
+			if(s.length > 1){
+				MazeState sState = new MazeState(s[1] + " " + s[2]);
+				MazeState gState = new MazeState(s[3] + " " + s[4]);
+				sm.setStartState(sState);
+				sm.setgState(gState);
+			}
+			m.solveMaze(sm);
 		}
 	}
 

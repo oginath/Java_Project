@@ -1,4 +1,4 @@
-package view;
+package view.CLI;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import view.View;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 import commands.Command;
@@ -53,7 +54,7 @@ public class CLIView extends Observable implements View {
 			while (t.isAlive())
 				continue;
 
-			notifyObservers();
+			notifyObservers(null);
 
 		} while (this.cli.getCmd() != "exit");
 	}
@@ -89,7 +90,7 @@ public class CLIView extends Observable implements View {
 	 * @return The command
 	 */
 	@Override
-	public Command getUserCommand() {
+	public Command getUserCommand(String cmd) {
 		return this.cmds.selectCommand(this.cli.getCmd());
 	}
 
@@ -98,7 +99,7 @@ public class CLIView extends Observable implements View {
 	 * 
 	 * @return the argument.
 	 */
-	public String getUserArg() {
+	public String getUserArg(String arg) {
 		return this.cli.getArg();
 	}
 
@@ -130,9 +131,9 @@ public class CLIView extends Observable implements View {
 	 * notify the observers.
 	 */
 	@Override
-	public void notifyObservers() {
+	public void notifyObservers(Object obj) {
 		for (Observer observer : Observers)
-			observer.update(this, null);
+			observer.update(this, obj);
 	}
 
 }
