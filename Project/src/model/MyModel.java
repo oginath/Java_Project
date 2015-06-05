@@ -13,9 +13,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import org.hibernate.exception.JDBCConnectionException;
+
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.MazeGenerator;
-import algorithms.search.Searchable;
 import algorithms.search.SearchableMaze;
 import algorithms.search.Searcher;
 import algorithms.search.Solution;
@@ -66,8 +67,15 @@ public class MyModel extends Observable implements Model {
 	 *            the number of threads in the thread pool
 	 */
 	public MyModel(Searcher s, MazeGenerator mg, int nOfThreads) {
+		try{
 		this.dm = new DataManager();
 		this.mTOs = this.loadMap();
+		}
+		catch(JDBCConnectionException e){
+				System.out.println("DB ERROR");
+				dm = null;
+		}
+		
 		this.nTOm = new HashMap<String, Maze>();
 		if (this.mTOs == null)
 			this.mTOs = new HashMap<Maze, ArrayList<Solution>>();
@@ -186,9 +194,11 @@ public class MyModel extends Observable implements Model {
 	 */
 	@Override
 	public void stop() {
+		if(dm!=null){
+			this.saveMap();
+			dm.shutdown();
+		}
 		tp.shutdown();
-		this.saveMap();
-		dm.shutdown();
 		try {
 			if (tp.awaitTermination(100, TimeUnit.MILLISECONDS))
 				;

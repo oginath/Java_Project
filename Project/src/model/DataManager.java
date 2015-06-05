@@ -13,6 +13,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.exception.JDBCConnectionException;
 import org.hibernate.service.ServiceRegistry;
 
 import algorithms.mazeGenerators.Cell;
@@ -43,7 +44,7 @@ public class DataManager {
 	 * Instantiates a new data manager. Loads the necessary configuration file,
 	 * and opens the session for making a transaction with the DB.
 	 */
-	public DataManager() {
+	public DataManager() throws JDBCConnectionException{
 		Logger log = Logger.getLogger("org.hibernate");
 		log.setLevel(Level.SEVERE);
 		String filePath = "resources/hibernate.cfg.xml";

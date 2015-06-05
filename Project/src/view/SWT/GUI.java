@@ -14,15 +14,10 @@ import org.eclipse.swt.widgets.Shell;
 
 import view.View;
 import view.CLI.MyCommands;
-import commands.Command;
-import algorithms.heuristic.MazeManhattanDistance;
 import algorithms.mazeGenerators.Maze;
-import algorithms.mazeGenerators.RecursiveBacktrackerMazeGenerator;
-import algorithms.search.AStar;
-import algorithms.search.Searchable;
-import algorithms.search.SearchableMaze;
-import algorithms.search.Searcher;
 import algorithms.search.Solution;
+
+import commands.Command;
 
 public class GUI extends BasicWindow implements View {
 

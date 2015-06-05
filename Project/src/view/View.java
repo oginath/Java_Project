@@ -60,5 +60,5 @@ public interface View {
 	 * @param s The solution to be displayed.
 	 */
 	void displaySolution(Solution s);
-	
+		
 }

@@ -99,6 +99,7 @@ public class Presenter implements Observer {
 				Solution s = m.getSolution(latestMaze);
 				v.displaySolution(s);
 			}
+			
 		} else if (o == v) {
 			Command cmd;
 			String[] s = null;
