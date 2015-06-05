@@ -10,24 +10,26 @@ import java.io.Serializable;
 import algorithms.mazeGenerators.MazeGenerator;
 import algorithms.search.Searcher;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Preferences.
+ * 
+ * This class is responsible for saving the settings of 
+ * some choices that in later parts of the project, the user will set.
  */
 @SuppressWarnings("serial")
 public class Preferences implements Serializable {
 	
-	/** The num of threads. */
+	/** The number of threads in the thread pool (Model). */
 	private int numOfThreads;
 	
-	/** The solver alg. */
+	/** The solver algorithm to be used (Model). */
 	private Searcher solverAlg;
 	
-	/** The generator alg. */
+	/** The generator algorithm to be used (Model) */
 	private MazeGenerator generatorAlg;
 	
 	//public int rows, cols; // default maze size
-	//public boolean isDiagonal; // default maze diagonal binary
+	//public boolean isDiagonal; // default maze diagonal t/f
 	
 	/**
 	 * Instantiates a new preferences.
@@ -37,54 +39,54 @@ public class Preferences implements Serializable {
 	}
 	
 	/**
-	 * Gets the num of threads.
+	 * Gets the number of threads.
 	 *
-	 * @return the num of threads
+	 * @return the number of threads
 	 */
 	public int getNumOfThreads() {
 		return numOfThreads;
 	}
 	
 	/**
-	 * Sets the num of threads.
+	 * Sets the number of threads.
 	 *
-	 * @param numOfThreads the new num of threads
+	 * @param numOfThreads the new number of threads
 	 */
 	public void setNumOfThreads(int numOfThreads) {
 		this.numOfThreads = numOfThreads;
 	}
 	
 	/**
-	 * Gets the solver alg.
+	 * Gets the solver algorithm.
 	 *
-	 * @return the solver alg
+	 * @return the solver algorithm
 	 */
 	public Searcher getSolverAlg() {
 		return solverAlg;
 	}
 	
 	/**
-	 * Sets the solver alg.
+	 * Sets the solver algorithm.
 	 *
-	 * @param solverAlg the new solver alg
+	 * @param solverAlg the new solver algorithm
 	 */
 	public void setSolverAlg(Searcher solverAlg) {
 		this.solverAlg = solverAlg;
 	}
 	
 	/**
-	 * Gets the generator alg.
+	 * Gets the generator algorithm.
 	 *
-	 * @return the generator alg
+	 * @return the generator algorithm
 	 */
 	public MazeGenerator getGeneratorAlg() {
 		return generatorAlg;
 	}
 	
 	/**
-	 * Sets the generator alg.
+	 * Sets the generator algorithm.
 	 *
-	 * @param generatorAlg the new generator alg
+	 * @param generatorAlg the new generator algorithm
 	 */
 	public void setGeneratorAlg(MazeGenerator generatorAlg) {
 		this.generatorAlg = generatorAlg;
@@ -92,6 +94,10 @@ public class Preferences implements Serializable {
 	
 	/**
 	 * Load preferences.
+	 * 
+	 * Loads the preferences that were set in a previous run of the program,
+	 * which are encoded in XML format.
+	 * 
 	 */
 	public void loadPreferences(){
 		try {
@@ -110,6 +116,8 @@ public class Preferences implements Serializable {
 	
 	/**
 	 * Save preferences.
+	 * 
+	 * Saves the preferences in XML format.
 	 */
 	public void savePreferences(){
 		try {

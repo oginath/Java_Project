@@ -5,51 +5,59 @@ import algorithms.search.Solution;
 
 import commands.Command;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface View.
  */
 public interface View {
 
-	
 	/**
 	 * Start.
+	 * 
+	 * a method to overridden.
 	 */
 	void start();
 	
 	/**
 	 * Sets the commands.
 	 *
-	 * @param cmdName the cmd name
-	 * @param cmd the cmd
+	 * a method to overridden.
+	 *
+	 * @param cmdName The name of the command
+	 * @param cmd The command
 	 */
 	void setCommands(String cmdName, Command cmd);
 	
 	/**
 	 * Gets the user command.
 	 *
-	 * @return the user command
+	 * a method to overridden.
+	 *
+	 * @return The user command
 	 */
 	Command getUserCommand();
 	
 	/**
-	 * Gets the user arg.
+	 * Gets the user argument.
+	 * 
+	 * a method to overridden.
 	 *
-	 * @return the user arg
+	 * @return The user argument
 	 */
 	String getUserArg();
 	
 	/**
 	 * Display maze.
 	 *
-	 * @param m the m
+	 * a method to overridden.
+	 *
+	 * @param m The maze to be displayed.
 	 */
 	void displayMaze(Maze m);
 	
 	/**
 	 * Display solution.
 	 *
-	 * @param s the s
+	 * @param s The solution to be displayed.
 	 */
 	void displaySolution(Solution s);
 }

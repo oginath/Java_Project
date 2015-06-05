@@ -3,17 +3,16 @@ package view;
 import commands.Command;
 import commands.UserCommands;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MyCommands.
  */
 public class MyCommands extends UserCommands {
 
 	/**
-	 * Sets the commands.
+	 * Adds a new command to the string (name of the command) to command map.
 	 *
-	 * @param cmdName the cmd name
-	 * @param cmd the cmd
+	 * @param cmdName The name of the command
+	 * @param cmd The command
 	 */
 	public void setCommands(String cmdName, Command cmd){
 		this.commands.put(cmdName, cmd);

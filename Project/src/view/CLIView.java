@@ -11,28 +11,27 @@ import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 import commands.Command;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MyView.
  */
-public class MyView extends Observable implements View {
+public class CLIView extends Observable implements View {
 
-	/** The Observers. */
+	/** The Observers of this class */
 	private ArrayList<Observer> Observers;
-	
-	/** The cmds. */
+
+	/** The Commands set. */
 	private MyCommands cmds;
-	
-	/** The cli. */
+
+	/** The Command Line Interface. */
 	private RunnableCLI cli;
-	
-	/** The t. */
+
+	/** a single Thread. */
 	Thread t;
 
 	/**
-	 * Instantiates a new my view.
+	 * Instantiates a new CLI view.
 	 */
-	public MyView() {
+	public CLIView() {
 		this.Observers = new ArrayList<Observer>();
 		this.cmds = new MyCommands();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -40,81 +39,95 @@ public class MyView extends Observable implements View {
 		this.cli = new RunnableCLI(br, pw);
 	}
 
-	/* (non-Javadoc)
-	 * @see view.View#start()
+	/**
+	 * Starts this view, by getting a command from the user, which is done in a
+	 * separate thread. if the user input is "exit" than this class stops.
 	 */
 	@Override
 	public void start() {
 		System.out.println("Type \"list\" for cmd list");
-		
+
 		do {
 			t = new Thread(cli);
 			t.start();
-			while(t.isAlive())
+			while (t.isAlive())
 				continue;
-			
+
 			notifyObservers();
-			
+
 		} while (this.cli.getCmd() != "exit");
 	}
 
-	/* (non-Javadoc)
-	 * @see view.View#displayMaze(algorithms.mazeGenerators.Maze)
+	/**
+	 * Displays the maze to the screen using the class maze' print method.
 	 */
 	@Override
 	public void displayMaze(Maze m) {
 		m.print();
 	}
 
-	/* (non-Javadoc)
-	 * @see view.View#displaySolution(algorithms.search.Solution)
+	/**
+	 * Displays the solution to the screen using the class solution' print
+	 * method.
 	 */
 	@Override
 	public void displaySolution(Solution s) {
 		s.print();
 	}
 
-	/* (non-Javadoc)
-	 * @see view.View#setCommands(java.lang.String, commands.Command)
+	/**
+	 * Sets a new Command.
 	 */
 	@Override
 	public void setCommands(String cmdName, Command cmd) {
 		this.cmds.setCommands(cmdName, cmd);
 	}
 
-	/* (non-Javadoc)
-	 * @see view.View#getUserCommand()
+	/**
+	 * Returns the latest command issued by the user.
+	 * 
+	 * @return The command
 	 */
 	@Override
 	public Command getUserCommand() {
 		return this.cmds.selectCommand(this.cli.getCmd());
 	}
 
-	/* (non-Javadoc)
-	 * @see view.View#getUserArg()
+	/**
+	 * Returns the latest argument set by the user.
+	 * 
+	 * @return the argument.
 	 */
 	public String getUserArg() {
 		return this.cli.getArg();
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Observable#addObserver(java.util.Observer)
+	/**
+	 * Add Observer.
+	 * 
+	 * @param o
+	 *            adds an observer to this the observers list.
 	 */
 	@Override
 	public void addObserver(Observer o) {
 		this.Observers.add(o);
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Observable#deleteObserver(java.util.Observer)
+	/**
+	 * Delete Observer.
+	 * 
+	 * @param o
+	 *            Removes an observer from the observers list.
 	 */
 	@Override
 	public void deleteObserver(Observer o) {
 		this.Observers.remove(o);
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.util.Observable#notifyObservers()
+
+	/**
+	 * Notify Observers.
+	 *
+	 * notify the observers.
 	 */
 	@Override
 	public void notifyObservers() {

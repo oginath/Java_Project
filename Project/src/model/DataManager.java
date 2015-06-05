@@ -19,25 +19,29 @@ import algorithms.mazeGenerators.Cell;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DataManager.
+ * The Class DataManager. This class handles the data transaction with the
+ * database. It can save a HashMap which maps between a maze to its solutions,
+ * it can update an existing map in the database and it can load one, and it can
+ * delete all of the data in the database.
  */
 public class DataManager {
 
 	/** The cell set. */
 	private HashMap<Cell, Integer> cellSet = null;
 
-	/** The session. */
+	/** The Hibernate session. */
 	private Session session = null;
 
-	/** The sf. */
+	/** The Session Factory. */
 	private SessionFactory sf = null;
 
+	/** The loaded HashMap */
 	private HashMap<Maze, ArrayList<Solution>> map;
 
 	/**
-	 * Instantiates a new data manager.
+	 * Instantiates a new data manager. Loads the necessary configuration file,
+	 * and opens the session for making a transaction with the DB.
 	 */
 	public DataManager() {
 		Logger log = Logger.getLogger("org.hibernate");
@@ -54,9 +58,9 @@ public class DataManager {
 
 	/**
 	 * Save maze map.
-	 *
+	 * 
 	 * @param map
-	 *            the map
+	 *            the Map (Maze to it's respective solutions) to save
 	 */
 	public void saveMazeMap(HashMap<Maze, ArrayList<Solution>> map) {
 
@@ -66,17 +70,17 @@ public class DataManager {
 
 			this.saveMaze(maze);
 
-//			Query query = session
-//					.createQuery("FROM Solution Order by solID desc");
-//			@SuppressWarnings("unchecked")
-//			List<Solution> soList = query.list();
-//			Iterator<Solution> soIt = soList.iterator();
-//
-//			int i = 0;
-//			if (soIt.hasNext()) {
-//				sol = soIt.next();
-//				i = sol.getSolID();
-//			}
+			// Query query = session
+			// .createQuery("FROM Solution Order by solID desc");
+			// @SuppressWarnings("unchecked")
+			// List<Solution> soList = query.list();
+			// Iterator<Solution> soIt = soList.iterator();
+			//
+			// int i = 0;
+			// if (soIt.hasNext()) {
+			// sol = soIt.next();
+			// i = sol.getSolID();
+			// }
 
 			Solution sol = null;
 			Iterator<Solution> it = map.get(maze).iterator();
@@ -84,7 +88,7 @@ public class DataManager {
 			while (it.hasNext()) {
 				sol = it.next();
 				sol.setMazeID(maze.getID());
-				//sol.setSolID(++i);
+				// sol.setSolID(++i);
 				this.saveSolution(sol);
 			}
 		}
@@ -95,8 +99,10 @@ public class DataManager {
 	/**
 	 * Save maze.
 	 *
+	 * an Inner method used to save a single Maze object
+	 *
 	 * @param maze
-	 *            the maze
+	 *            the Maze to be saved in the DB
 	 */
 	private void saveMaze(Maze maze) {
 
@@ -115,20 +121,20 @@ public class DataManager {
 			}
 		}
 
-//		Query query = session.createQuery("FROM Maze Order by ID desc");
-//
-//		@SuppressWarnings("unchecked")
-//		List<Maze> idList = query.list();
-//		Iterator<Maze> idIt = idList.iterator();
-//
-//		Integer x = null;
-//		Maze tempMaze = null;
-//		if (idIt.hasNext()) {
-//			tempMaze = idIt.next();
-//			x = tempMaze.getID() + 1;
-//			maze.setID(x);
-//		} else
-//			maze.setID(1);
+		// Query query = session.createQuery("FROM Maze Order by ID desc");
+		//
+		// @SuppressWarnings("unchecked")
+		// List<Maze> idList = query.list();
+		// Iterator<Maze> idIt = idList.iterator();
+		//
+		// Integer x = null;
+		// Maze tempMaze = null;
+		// if (idIt.hasNext()) {
+		// tempMaze = idIt.next();
+		// x = tempMaze.getID() + 1;
+		// maze.setID(x);
+		// } else
+		// maze.setID(1);
 
 		maze.setMatrixArray(new byte[maze.getRows() * maze.getCols()]);
 
@@ -153,8 +159,10 @@ public class DataManager {
 	/**
 	 * Save solution.
 	 *
+	 * An inner method, used to save (or update) a single solution.
+	 *
 	 * @param s
-	 *            the s
+	 *            The solution to be saved in the DB
 	 */
 	private void saveSolution(Solution s) {
 
@@ -164,7 +172,9 @@ public class DataManager {
 	/**
 	 * Load maze map.
 	 *
-	 * @return the hash map
+	 * Loads the maze to solutions map as it was saved the last time.
+	 *
+	 * @return The hash map from the database.
 	 */
 	public HashMap<Maze, ArrayList<Solution>> loadMazeMap() {
 
@@ -199,9 +209,13 @@ public class DataManager {
 	/**
 	 * Load maze.
 	 *
+	 * An inner method. Loads a single maze from the database specified by it's
+	 * ID.
+	 *
 	 * @param index
-	 *            the index
-	 * @return the maze
+	 *            the ID of the maze to be loaded.
+	 * 
+	 * @return the maze that was loaded.
 	 */
 	private Maze loadMaze(int index) {
 
@@ -215,7 +229,7 @@ public class DataManager {
 		if (it.hasNext())
 			m = it.next();
 		else {
-			System.out.println("No Saved Data!"); // v.display()
+			// System.out.println("No Saved Data!");
 			return null;
 		}
 		Cell[][] matrix = new Cell[m.getRows()][m.getCols()];
@@ -246,9 +260,13 @@ public class DataManager {
 	/**
 	 * Load solutions.
 	 *
+	 * An inner method. Loads the Solutions which be belong to the required
+	 * maze.
+	 *
 	 * @param mazeID
-	 *            the maze id
-	 * @return the array list
+	 *            The ID of the maze the solutions belong to.
+	 * 
+	 * @return The collection of solutions.
 	 */
 	private ArrayList<Solution> loadSolutions(int mazeID) {
 
@@ -269,6 +287,8 @@ public class DataManager {
 
 	/**
 	 * Delete all.
+	 * 
+	 * deletes all of the data in the database.
 	 */
 	public void deleteAll() {
 
@@ -288,12 +308,10 @@ public class DataManager {
 
 	/**
 	 * Shutdown.
+	 * 
+	 * Closes the session factory.
 	 */
 	public void shutdown() {
 		this.sf.close();
 	}
-
-	// TODO 1: delete maze (and subsequential solutions)
-	// TODO 2: update maze (update solutions pretty much)
-	// TODO: Possible problem with deleting after loading
 }

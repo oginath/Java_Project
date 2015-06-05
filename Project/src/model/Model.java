@@ -5,47 +5,66 @@ import java.util.HashMap;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface Model.
  */
 public interface Model {
 
-	
 	/**
 	 * Generate maze.
 	 *
-	 * @param rows the rows
-	 * @param cols the cols
+	 * A method to be overridden.
+	 *
+	 * @param rows
+	 *            the rows of the maze that's to be generated
+	 * @param cols
+	 *            the columns of the maze that's to be generated
 	 */
 	void generateMaze(int rows, int cols);
-	
+
 	/**
 	 * Gets the maze.
+	 *
+	 * A method to be overridden.
 	 *
 	 * @return the maze
 	 */
 	Maze getMaze();
-	
+
 	/**
-	 * Solve maze.
-	 *
-	 * @param m the m
+	 * Get name to maze Map.
+	 * 
+	 * A method to be overridden.
+	 * 
+	 * @return a HashMap between a string to a maze object
 	 */
 	HashMap<String, Maze> getNtoM();
-	
+
+	/**
+	 * Solve maze.
+	 * 
+	 * A method to be overridden.
+	 * 
+	 * @param m
+	 *            the maze
+	 */
 	void solveMaze(Maze m);
-	
+
 	/**
 	 * Gets the solution.
 	 *
-	 * @param maze the maze
+	 * A method to be overridden.
+	 *
+	 * @param maze
+	 *            the maze
 	 * @return the solution
 	 */
 	Solution getSolution(Maze maze);
-	
+
 	/**
 	 * Stop.
+	 * 
+	 * A method to be overridden.
 	 */
 	void stop();
 }
