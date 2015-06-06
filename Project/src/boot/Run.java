@@ -4,10 +4,12 @@ package boot;
 //	By: Or Ginath 205928161
 //      
 
+import java.util.Observable;
+
 import model.MyModel;
-import presenter.Presenter;
 import presenter.Preferences;
-import view.CLI.CLIView;
+import presenter.Presenter;
+import view.View;
 import view.SWT.GUI;
 
 /**
@@ -19,10 +21,10 @@ public class Run {
 		Preferences pref = new Preferences();
 		pref.loadPreferences();
 		MyModel m = new MyModel(pref.getSolverAlg(), pref.getGeneratorAlg(), pref.getNumOfThreads());
-		GUI v = new GUI();
+		View v = new GUI();
 		Presenter p = new Presenter(v,m);
 		m.addObserver(p);
-		v.addObserver(p);
+		((Observable)(v)).addObserver(p);
 	
 		v.start();
 		m.stop();

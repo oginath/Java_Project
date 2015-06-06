@@ -12,7 +12,7 @@
           root
         </property>
         <property name="connection.password">
-          528491a
+          528491
         </property>
         <!-- Set AutoCommit to true -->
         <property name="connection.autocommit">

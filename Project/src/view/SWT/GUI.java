@@ -1,6 +1,7 @@
 package view.SWT;
 import java.util.ArrayList;
 import java.util.Observer;
+import java.util.Random;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -16,7 +17,6 @@ import view.View;
 import view.CLI.MyCommands;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
-
 import commands.Command;
 
 public class GUI extends BasicWindow implements View {
@@ -32,6 +32,7 @@ public class GUI extends BasicWindow implements View {
 	Button buttonNewGame, buttonStopGame, buttonGetClue;
 	int clues;
 	private MyCommands cmds;
+	Integer hash;
 
 	public GUI() {
 		super();
@@ -101,7 +102,11 @@ public class GUI extends BasicWindow implements View {
 
 			public void widgetSelected(SelectionEvent event) {
 				shell.setMenuBar(null);
-				notifyObservers("generate maze default 32 32");
+				
+				hash = new Random().nextInt();
+				hash = hash.hashCode();
+				
+				notifyObservers("generate maze " + hash + " 32 32");
 			}
 			
 		});
@@ -136,7 +141,7 @@ public class GUI extends BasicWindow implements View {
 				if(clues == 3)
 					buttonGetClue.setEnabled(false);
 				
-				notifyObservers("solve maze default " + md.getCharPosistion().getState() + " " + md.getGoalPosistion().getState());				
+				notifyObservers("solve maze " + hash + " " + md.getCharPosistion().getState() + " " + md.getGoalPosistion().getState());				
 			}
 		});
 		
