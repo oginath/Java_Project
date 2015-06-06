@@ -1,4 +1,4 @@
-<h1>Java Project (the Maze Spelunker)</h1> 
+<h1>Project (the Maze Spelunker) - Client Side</h1> 
 
 
 Repository for the project in course Algorithmic Development in Java with lecturer Eliahu Khalastchi.
