@@ -90,7 +90,7 @@ public class Presenter implements Observer {
 			if (((String)(obj)).equals("maze")) {
 				Maze maze = m.getMaze();
 				maze.setName(this.nlist.poll());
-				this.m.getNtoM().put(maze.getName(), maze);
+				this.m.insertMaze(maze, maze.getName());
 				// System.out.println("Maze is ready!");
 				latestMaze = maze;
 				v.displayMaze(maze);
@@ -153,7 +153,7 @@ public class Presenter implements Observer {
 		public void doCommand(String arg) {
 			String[] args = arg.split(" ");
 			if (args.length == 3) {
-				if (m.getNtoM().containsKey(args[0])) {
+				if (m.isMazeExist(args[0])) {
 					System.out.println("Maze with this name already exists!");
 					return;
 				}
@@ -164,7 +164,7 @@ public class Presenter implements Observer {
 
 				m.generateMaze(rows, cols);
 			} else
-				System.out.println("args error");//
+				System.out.println("args error");
 		}
 	}
 
@@ -185,7 +185,7 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand(String mName) {
 			String[] s = mName.split(" ");
-			Maze maze = m.getNtoM().get(s[0]);
+			Maze maze = m.getMaze(s[0]);
 			v.displayMaze(maze);
 		}
 	}
@@ -207,7 +207,7 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand(String mName) {
 			String[] s = mName.split(" ");
-			Maze maze = m.getNtoM().get(s[0]);
+			Maze maze = m.getMaze(s[0]);
 			SearchableMaze sm = new SearchableMaze(maze, false);
 			if(s.length > 1){
 				MazeState sState = new MazeState(s[1] + " " + s[2]);
@@ -236,7 +236,7 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand(String mName) {
 			String[] s = mName.split(" ");
-			v.displaySolution(m.getSolution(m.getNtoM().get(s[0])));
+			v.displaySolution(m.getSolution(m.getMaze(s[0])));
 		}
 	}
 

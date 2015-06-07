@@ -1,7 +1,5 @@
 package model;
 
-import java.util.HashMap;
-
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.SearchableMaze;
 import algorithms.search.Solution;
@@ -33,15 +31,6 @@ public interface Model {
 	Maze getMaze();
 
 	/**
-	 * Get name to maze Map.
-	 * 
-	 * A method to be overridden.
-	 * 
-	 * @return a HashMap between a string to a maze object
-	 */
-	HashMap<String, Maze> getNtoM();
-
-	/**
 	 * Solve maze.
 	 * 
 	 * A method to be overridden.
@@ -68,4 +57,10 @@ public interface Model {
 	 * A method to be overridden.
 	 */
 	void stop();
+
+	Maze getMaze(String name);
+
+	boolean isMazeExist(String name);
+
+	void insertMaze(Maze m, String name);
 }

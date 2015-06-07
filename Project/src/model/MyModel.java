@@ -200,8 +200,7 @@ public class MyModel extends Observable implements Model {
 		}
 		tp.shutdown();
 		try {
-			if (tp.awaitTermination(100, TimeUnit.MILLISECONDS))
-				;
+			if (tp.awaitTermination(100, TimeUnit.MILLISECONDS));
 			// exit complete
 			// else
 			// System.out.println("Shutdown error?");
@@ -210,10 +209,21 @@ public class MyModel extends Observable implements Model {
 		}
 	}
 
-	public HashMap<String, Maze> getNtoM() {
-		return nTOm;
+	@Override
+	public Maze getMaze(String name) {
+		return nTOm.get(name);
 	}
 
+	@Override
+	public boolean isMazeExist(String name){
+		return nTOm.containsKey(name);
+	}
+	
+	@Override
+	public void insertMaze(Maze m, String name){
+		this.nTOm.put(name, m);
+	}
+	
 	/**
 	 * Add Observer.
 	 * 
