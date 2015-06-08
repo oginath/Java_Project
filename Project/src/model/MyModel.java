@@ -103,6 +103,7 @@ public class MyModel extends Observable implements Model {
 	 */
 	@Override
 	public void generateMaze(int rows, int cols) {
+		// myServer.write("gmaze " + rows " " + cols);
 		System.out.println("Generating Maze....");
 		Future<Maze> fm = tp.submit(new Callable<Maze>() {
 			@Override

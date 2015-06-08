@@ -91,11 +91,9 @@ public class Presenter implements Observer {
 				Maze maze = m.getMaze();
 				maze.setName(this.nlist.poll());
 				this.m.insertMaze(maze, maze.getName());
-				// System.out.println("Maze is ready!");
 				latestMaze = maze;
 				v.displayMaze(maze);
 			} else if (((String) (obj)).equals("solution")) {
-				// System.out.println("Solution is ready!");
 				Solution s = m.getSolution(latestMaze);
 				v.displaySolution(s);
 			}

@@ -618,7 +618,7 @@ public class MazeBoard extends Canvas {
 
 			radius = (getBounds().width + getBounds().height) / 35;
 			for (int i = 0; i < totcount; i++)
-				radius += radius * 0.65;
+				radius += radius * 0.40;
 
 			region = new Region();
 			region.add(new Rectangle(0, 0, getBounds().width - 5,
