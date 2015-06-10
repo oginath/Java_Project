@@ -1,7 +1,6 @@
 package model;
 
 import algorithms.mazeGenerators.Maze;
-import algorithms.search.SearchableMaze;
 import algorithms.search.Solution;
 
 /**
@@ -19,7 +18,7 @@ public interface Model {
 	 * @param cols
 	 *            the columns of the maze that's to be generated
 	 */
-	void generateMaze(int rows, int cols);
+	void generateMaze(String name, int rows, int cols);
 
 	/**
 	 * Gets the maze.
@@ -28,7 +27,7 @@ public interface Model {
 	 *
 	 * @return the maze
 	 */
-	Maze getMaze();
+	Maze getMaze(String name);
 
 	/**
 	 * Solve maze.
@@ -38,7 +37,7 @@ public interface Model {
 	 * @param m
 	 *            the maze
 	 */
-	void solveMaze(SearchableMaze sm);
+	void solveMaze(String arg);
 
 	/**
 	 * Gets the solution.
@@ -49,7 +48,7 @@ public interface Model {
 	 *            the maze
 	 * @return the solution
 	 */
-	Solution getSolution(Maze maze);
+	Solution getSolution(String name);
 
 	/**
 	 * Stop.
@@ -58,9 +57,7 @@ public interface Model {
 	 */
 	void stop();
 
-	Maze getMaze(String name);
-
-	boolean isMazeExist(String name);
-
-	void insertMaze(Maze m, String name);
+//	boolean isMazeExist(String name);
+//
+//	void insertMaze(Maze m, String name);
 }
