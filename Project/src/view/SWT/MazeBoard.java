@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.Shell;
 import algorithms.mazeGenerators.Cell;
 import algorithms.mazeGenerators.Directions;
 import algorithms.mazeGenerators.Maze;
-import algorithms.search.MazeState;
 import algorithms.search.Searchable;
 import algorithms.search.SearchableMaze;
 import algorithms.search.Solution;
@@ -99,6 +98,7 @@ public class MazeBoard extends Canvas {
 
 		won = false;
 		stopped = false;
+		
 
 		startTime = System.currentTimeMillis();
 
@@ -136,7 +136,7 @@ public class MazeBoard extends Canvas {
 		String[] start = s.getStartState().getState().split(" ");
 		sX = Integer.parseInt(start[0]);
 		sY = Integer.parseInt(start[1]);
-
+		
 		String[] goal = s.getGoalState().getState().split(" ");
 		gX = Integer.parseInt(goal[0]);
 		gY = Integer.parseInt(goal[1]);
@@ -831,8 +831,7 @@ public class MazeBoard extends Canvas {
 		clue = new ArrayList<Point>();
 		clueMap = new HashMap<Point, String>();
 
-		for (int i = c.size(); i > 12; i--, c.remove(i))
-			;
+		for (int i = c.size(); i > 12; i--, c.remove(i));
 		for (int i = 0; i < c.size(); i++) {
 			String[] sp = c.get(i).split(" ");
 			Point xy = new Point(Integer.parseInt(sp[0]),
@@ -870,16 +869,12 @@ public class MazeBoard extends Canvas {
 		return clip;
 	}
 
-	public MazeState getCharPosistion() {
-		MazeState ms = new MazeState(sX + " " + sY);
-
-		return ms;
+	public String getCharPosistion() {
+		return sX + " " + sY;
 	}
 
-	public MazeState getGoalPosistion() {
-		MazeState ms = new MazeState(gX + " " + gY);
-
-		return ms;
+	public String getGoalPosistion() {
+		return gX + " " + gY;
 	}
 
 	private static int[] circle(int r, int offsetX, int offsetY) {

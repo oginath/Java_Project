@@ -141,7 +141,7 @@ public class GUI extends BasicWindow implements View {
 				if(clues == 3)
 					buttonGetClue.setEnabled(false);
 				
-				notifyObservers("solve maze " + hash + " " + md.getCharPosistion().getState() + " " + md.getGoalPosistion().getState());				
+				notifyObservers("solve maze " + hash + " " + md.getCharPosistion() + " " + md.getGoalPosistion());				
 			}
 		});
 		
