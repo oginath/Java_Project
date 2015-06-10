@@ -831,6 +831,13 @@ public class MazeBoard extends Canvas {
 		clue = new ArrayList<Point>();
 		clueMap = new HashMap<Point, String>();
 
+		for(int i = 0; i < c.size(); i++){
+			if(c.get(i).equals(sX + " " + sY)){
+				for(int j = 0; j < i + 1; i--, c.remove(j));
+				break;
+			}
+		}
+		
 		for (int i = c.size(); i > 12; i--, c.remove(i));
 		for (int i = 0; i < c.size(); i++) {
 			String[] sp = c.get(i).split(" ");
