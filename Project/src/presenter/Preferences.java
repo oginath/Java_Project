@@ -47,6 +47,13 @@ public class Preferences implements Serializable {
 		this.ui = ui;
 	}
 	
+	public View getView(){
+		try {
+			return this.ui.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {e.printStackTrace();}
+		return null;
+	}
+	
 	/**
 	 * Load preferences.
 	 * 
