@@ -61,6 +61,8 @@ public interface View {
 	 * @param s The solution to be displayed.
 	 */
 	void displaySolution(Solution s);
+	
+	void displayError(String err);
 		
 	void addObserver(Observer o);
 	

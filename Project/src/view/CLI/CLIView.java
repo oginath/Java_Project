@@ -76,6 +76,11 @@ public class CLIView extends Observable implements View {
 		s.print();
 	}
 
+	@Override
+	public void displayError(String err) {
+		System.out.println(err);
+		
+	}
 	/**
 	 * Sets a new Command.
 	 */
@@ -135,5 +140,6 @@ public class CLIView extends Observable implements View {
 		for (Observer observer : Observers)
 			observer.update(this, obj);
 	}
+
 
 }

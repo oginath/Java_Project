@@ -86,17 +86,25 @@ public class Presenter implements Observer {
 	@Override
 	public void update(Observable o, Object obj) {
 		if (o == m) {
-			if (((String)(obj)).equals("maze")) {
+			switch((String)(obj)){
+			case "maze":
 				latestMaze = nlist.poll();
 				Maze maze = m.getMaze(latestMaze);
 
 				v.displayMaze(maze);
-			} else if (((String) (obj)).equals("solution")) {
+				break;
+				
+			case "solution":
 				Solution s = m.getSolution(latestMaze);
 				v.displaySolution(s);
+				break;
+				
+			case "not connected":
+				v.displayError("Could not connect to Server!");
+				break;
 			}
-			
-		} else if (o == v) {
+		}
+		else if (o == v) {
 			Command cmd;
 			String[] s = null;
 			if(obj != null){

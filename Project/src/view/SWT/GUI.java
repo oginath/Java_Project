@@ -9,6 +9,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -17,6 +18,7 @@ import view.View;
 import view.CLI.MyCommands;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
+
 import commands.Command;
 
 public class GUI extends BasicWindow implements View {
@@ -215,6 +217,26 @@ public class GUI extends BasicWindow implements View {
 		md.insertClue(s);
 	}
 	
+	@Override
+	public void displayError(String err) {
+		Shell errShell = new Shell(shell);
+		errShell.setSize(200, 100);
+		errShell.setLayout(new GridLayout(1,false));
+		errShell.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false , true, 1, 1));
+		Label l = new Label(errShell, SWT.NULL);
+		l.setText(err);
+		l.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
+		errShell.open();
+		
+		shell.setEnabled(false);
+		while(!errShell.isDisposed()){
+			if(!errShell.getDisplay().readAndDispatch())
+				errShell.getDisplay().sleep();
+		}
+		
+		shell.setEnabled(true);
+	}
+	
 	/**
 	 * Add Observer.
 	 * 
@@ -247,5 +269,6 @@ public class GUI extends BasicWindow implements View {
 		for (Observer observer : Observers)
 			observer.update(this, obj);
 	}
+
 
 }

@@ -43,9 +43,11 @@ public class ClientModel extends Observable implements Model {
 		if(connected){
 		outToServer.println("genmaze " + name + " " + rows + " " + cols);
 		outToServer.flush();
+		notifyObservers("maze");
 		}
 		
-		notifyObservers("maze");
+		else
+			notifyObservers("not connected");
 	}
 
 	@Override
