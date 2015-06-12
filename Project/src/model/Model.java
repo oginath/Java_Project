@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Observer;
+
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 
@@ -49,6 +51,9 @@ public interface Model {
 	 * @return the solution
 	 */
 	Solution getSolution(String name);
+	
+	void addObserver(Observer o);
+
 
 	/**
 	 * Stop.

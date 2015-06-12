@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <java version="1.8.0_31" class="java.beans.XMLDecoder">
  <object class="presenter.Preferences">
-  <void property="generatorAlg">
-   <object class="algorithms.mazeGenerators.RecursiveBacktrackerMazeGenerator"/>
+  <void property="UI">
+   <class>view.SWT.GUI</class>
   </void>
-  <void property="numOfThreads">
-   <int>3</int>
+  <void property="address">
+   <string>localhost</string>
   </void>
-  <void property="solverAlg">
-   <object class="algorithms.search.BFS"/>
+  <void property="port">
+   <int>5400</int>
   </void>
  </object>
 </java>

@@ -23,7 +23,6 @@ public class GUI extends BasicWindow implements View {
 
 	/** The Observers of this class */
 	private ArrayList<Observer> Observers;
-
 	MazeBoard md;
 	Maze maze;
 	Menu menuBar, fileMenu, helpMenu;
@@ -93,16 +92,14 @@ public class GUI extends BasicWindow implements View {
 		
 
 		buttonGetClue = new Button(this.shell, SWT.PUSH);
-		buttonGetClue.setText("Get Clue");
+		buttonGetClue.setText("Clue");
 		buttonGetClue.setLayoutData(new GridData(SWT.FILL , SWT.TOP, false, false, 1,1));
 		buttonGetClue.setVisible(false);
 		buttonGetClue.setEnabled(false);
 		
 		buttonNewGame.addSelectionListener(new SelectionAdapter(){
 
-			public void widgetSelected(SelectionEvent event) {
-				shell.setMenuBar(null);
-				
+			public void widgetSelected(SelectionEvent event) {				
 				hash = new Random().nextInt();
 				hash = hash.hashCode();
 				
@@ -200,14 +197,17 @@ public class GUI extends BasicWindow implements View {
 	@Override
 	public void displayMaze(Maze m) {	
 		this.maze = m;
-		md.setMaze(maze);
-		md.start();
-		buttonNewGame.setEnabled(false);
-		buttonStopGame.setVisible(true);
-		buttonStopGame.setEnabled(true);
-		buttonGetClue.setVisible(true);
-		buttonGetClue.setEnabled(true);
-		clues = 0;
+		if(m!= null){
+			shell.setMenuBar(null);
+			md.setMaze(maze);
+			md.start();
+			buttonNewGame.setEnabled(false);
+			buttonStopGame.setVisible(true);
+			buttonStopGame.setEnabled(true);
+			buttonGetClue.setVisible(true);
+			buttonGetClue.setEnabled(true);
+			clues = 0;
+		}
 	}
 
 	@Override

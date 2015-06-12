@@ -1,8 +1,9 @@
 package view;
 
+import java.util.Observer;
+
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
-
 import commands.Command;
 
 /**
@@ -61,4 +62,6 @@ public interface View {
 	 */
 	void displaySolution(Solution s);
 		
+	void addObserver(Observer o);
+	
 }

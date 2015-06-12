@@ -7,89 +7,44 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 
-import algorithms.mazeGenerators.MazeGenerator;
-import algorithms.search.Searcher;
+import view.View;
 
 /**
+ * 
  * The Class Preferences.
  * 
- * This class is responsible for saving the settings of 
- * some choices that in later parts of the project, the user will set.
  */
 @SuppressWarnings("serial")
 public class Preferences implements Serializable {
 	
-	/** The number of threads in the thread pool (Model). */
-	private int numOfThreads;
+	private int port;
 	
-	/** The solver algorithm to be used (Model). */
-	private Searcher solverAlg;
+	private String address;
 	
-	/** The generator algorithm to be used (Model) */
-	private MazeGenerator generatorAlg;
+	private Class<? extends View> ui;
 	
-	//public int rows, cols; // default maze size
-	//public boolean isDiagonal; // default maze diagonal t/f
-	
-	/**
-	 * Instantiates a new preferences.
-	 */
-	public Preferences() {
-		
+	public int getPort() {
+		return port;
 	}
 	
-	/**
-	 * Gets the number of threads.
-	 *
-	 * @return the number of threads
-	 */
-	public int getNumOfThreads() {
-		return numOfThreads;
+	public void setPort(int port) {
+		this.port = port;
 	}
 	
-	/**
-	 * Sets the number of threads.
-	 *
-	 * @param numOfThreads the new number of threads
-	 */
-	public void setNumOfThreads(int numOfThreads) {
-		this.numOfThreads = numOfThreads;
+	public String getAddress() {
+		return address;
 	}
 	
-	/**
-	 * Gets the solver algorithm.
-	 *
-	 * @return the solver algorithm
-	 */
-	public Searcher getSolverAlg() {
-		return solverAlg;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	
-	/**
-	 * Sets the solver algorithm.
-	 *
-	 * @param solverAlg the new solver algorithm
-	 */
-	public void setSolverAlg(Searcher solverAlg) {
-		this.solverAlg = solverAlg;
+	public Class<? extends View> getUI() {
+		return ui;
 	}
 	
-	/**
-	 * Gets the generator algorithm.
-	 *
-	 * @return the generator algorithm
-	 */
-	public MazeGenerator getGeneratorAlg() {
-		return generatorAlg;
-	}
-	
-	/**
-	 * Sets the generator algorithm.
-	 *
-	 * @param generatorAlg the new generator algorithm
-	 */
-	public void setGeneratorAlg(MazeGenerator generatorAlg) {
-		this.generatorAlg = generatorAlg;
+	public void setUI(Class<? extends View> ui) {
+		this.ui = ui;
 	}
 	
 	/**
@@ -105,15 +60,16 @@ public class Preferences implements Serializable {
 			Preferences p  = (Preferences) xmlDe.readObject();
 			xmlDe.close();
 			
-			this.generatorAlg = p.getGeneratorAlg();
-			this.numOfThreads = p.getNumOfThreads();
-			this.solverAlg = p.getSolverAlg();
+			this.port = p.getPort();
+			this.address = p.getAddress();
+			this.setUI(p.getUI());
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 	
+
 	/**
 	 * Save preferences.
 	 * 
@@ -128,4 +84,5 @@ public class Preferences implements Serializable {
 			e.printStackTrace();
 		}
 	}
+
 }

@@ -23,24 +23,27 @@ public class ClientModel extends Observable implements Model {
 	Socket myServer;
 	ObjectInputStream ois;
 	PrintWriter outToServer;
+	boolean connected;
+	int port;
+	String address;
 	
-	public ClientModel() {
-		try {
-			myServer = new Socket("localhost", 5400);
-			
-			ois = new ObjectInputStream(myServer.getInputStream());
-			outToServer = new PrintWriter(new OutputStreamWriter(myServer.getOutputStream()));
-						
-			Observers = new ArrayList<Observer>();
-			
-		} catch (IOException e) {e.printStackTrace();}
+	public ClientModel(int port, String address) {
+		connected = false;
+		Observers = new ArrayList<Observer>();
+		
+		this.port = port;
+		this.address = address;
 	}
 	
 	@Override
 	public void generateMaze(String name, int rows, int cols) {
+		if(!connected)
+			connect();
 		
+		if(connected){
 		outToServer.println("genmaze " + name + " " + rows + " " + cols);
 		outToServer.flush();
+		}
 		
 		notifyObservers("maze");
 	}
@@ -48,18 +51,20 @@ public class ClientModel extends Observable implements Model {
 	@Override
 	public Maze getMaze(String name) {
 		Maze m = null;
-		try {
-		outToServer.println("getmaze " + name);
-		outToServer.flush();
-				
-		Compressor c = new HuffmanAlg();
-		ByteArrayInputStream bais = new ByteArrayInputStream(c.decompress(Base64.getDecoder().decode
-				(((String) ois.readObject()).getBytes())));
-		ObjectInputStream objIn = new ObjectInputStream(bais);
-		objIn.close();
-		
-		m = (Maze) objIn.readObject();
-		} catch (ClassNotFoundException | IOException e) {e.printStackTrace();}
+		if(connected){
+			try {
+			outToServer.println("getmaze " + name);
+			outToServer.flush();
+					
+			Compressor c = new HuffmanAlg();
+			ByteArrayInputStream bais = new ByteArrayInputStream(c.decompress(Base64.getDecoder().decode
+					(((String) ois.readObject()).getBytes())));
+			ObjectInputStream objIn = new ObjectInputStream(bais);
+			objIn.close();
+			
+			m = (Maze) objIn.readObject();
+			} catch (ClassNotFoundException | IOException e) {e.printStackTrace();}
+		}
 		return m;
 	}
 
@@ -83,16 +88,29 @@ public class ClientModel extends Observable implements Model {
 		return sol;
 	}
 
+	public void connect(){
+		try {
+			myServer = new Socket(this.address, this.port);
+			
+			ois = new ObjectInputStream(myServer.getInputStream());
+			outToServer = new PrintWriter(new OutputStreamWriter(myServer.getOutputStream()));
+						
+			connected = true;
+		} catch (IOException e) {connected = false;}
+	}
+	
 	@Override
 	public void stop() {
-		try {
-			outToServer.println("stop");
-			outToServer.flush();
-			
-			outToServer.close();
-			ois.close();
-			myServer.close();
-		} catch (IOException e) {e.printStackTrace();}
+		if(myServer != null){
+			try {
+				outToServer.println("stop");
+				outToServer.flush();
+				
+				outToServer.close();
+				ois.close();
+				myServer.close();
+			} catch (IOException e) {e.printStackTrace();}
+		}
 	}
 
 	@Override
