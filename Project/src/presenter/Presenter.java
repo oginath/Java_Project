@@ -90,18 +90,25 @@ public class Presenter implements Observer {
 			case "maze":
 				latestMaze = nlist.poll();
 				Maze maze = m.getMaze(latestMaze);
-
-				v.displayMaze(maze);
+				if(maze != null)
+					v.displayMaze(maze);
 				break;
 				
 			case "solution":
 				Solution s = m.getSolution(latestMaze);
-				v.displaySolution(s);
+				if(s != null)
+					v.displaySolution(s);
 				break;
 				
 			case "not connected":
 				v.displayError("Could not connect to Server!");
 				break;
+				
+			case "already exists":
+				v.displayError("Maze with this name already exists!");
+				break;
+			case "doesn't exists":
+				v.displayError("Maze with this name doesn't exists!");
 			}
 		}
 		else if (o == v) {
@@ -117,10 +124,13 @@ public class Presenter implements Observer {
 			}
 			if (cmd != null) {
 				String arg = null;
-				if(s!=null){
-					if(s[0].equals("generate"))
+				if(s!=null)
+					switch(s[0]){
+					case "generate":
 						arg = s[2] + " " + s[3] + " " + s[4];
-					else if(s[0].equals("solve")){
+						break;
+						
+					case "solve":
 						arg = "";
 						for(int i = 0; i < 5; i++){
 							arg += s[i+2];
@@ -128,8 +138,11 @@ public class Presenter implements Observer {
 								continue;
 							arg += " ";
 						}
+						break;
+					case "display":
+						arg =  latestMaze = s[2] ;
+						break;
 					}
-				}
 				else
 					arg = v.getUserArg(null);	
 				cmd.doCommand(arg);
@@ -188,9 +201,9 @@ public class Presenter implements Observer {
 		 */
 		@Override
 		public void doCommand(String mName) {
-			String[] s = mName.split(" ");
-			Maze maze = m.getMaze(s[0]);
-			v.displayMaze(maze);
+			Maze maze = m.getMaze(mName);
+			if(maze != null)
+				v.displayMaze(maze);
 		}
 	}
 

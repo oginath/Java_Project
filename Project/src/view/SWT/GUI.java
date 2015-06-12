@@ -1,24 +1,27 @@
 package view.SWT;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Observer;
-import java.util.Random;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import view.View;
 import view.CLI.MyCommands;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
-
 import commands.Command;
 
 public class GUI extends BasicWindow implements View {
@@ -30,11 +33,11 @@ public class GUI extends BasicWindow implements View {
 	Menu menuBar, fileMenu, helpMenu;
 	MenuItem fileHeader, helpHeader;
 	MenuItem openFileItem, exitItem, helpItem, creditsItem;
-	Button buttonNewGame, buttonStopGame, buttonGetClue;
+	Button buttonNewGame, buttonLoadGame, buttonStopGame, buttonGetClue;
 	int clues;
 	private MyCommands cmds;
-	Integer hash;
-
+	String mazeName;
+	
 	public GUI() {
 		super();
 		this.Observers = new ArrayList<Observer>();
@@ -81,14 +84,18 @@ public class GUI extends BasicWindow implements View {
 		
 		buttonNewGame = new Button(this.shell, SWT.PUSH | SWT.BUTTON1);
 		buttonNewGame.setText("New Game");
-		buttonNewGame.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false, 1, 1));
+		buttonNewGame.setLayoutData(new GridData(GridData.FILL, SWT.CENTER, false, false, 1, 1));
 		
 		md = new MazeBoard(shell, SWT.BORDER | SWT.DOUBLE_BUFFERED, null);
-		md.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 3));
+		md.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 4));
+		
+		buttonLoadGame = new Button(this.shell, SWT.PUSH);
+		buttonLoadGame.setText("Load Game");
+		buttonLoadGame.setLayoutData(new GridData(GridData.FILL, SWT.CENTER, false, false, 1, 1));
 		
 		buttonStopGame = new Button(this.shell, SWT.PUSH);
 		buttonStopGame.setText("Stop Game");
-		buttonStopGame.setLayoutData(new GridData(SWT.BEGINNING, SWT.TOP, false, false, 1, 1));
+		buttonStopGame.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		buttonStopGame.setVisible(false);
 		buttonStopGame.setEnabled(false);
 		
@@ -101,13 +108,159 @@ public class GUI extends BasicWindow implements View {
 		
 		buttonNewGame.addSelectionListener(new SelectionAdapter(){
 
-			public void widgetSelected(SelectionEvent event) {				
-				hash = new Random().nextInt();
-				hash = hash.hashCode();
+			Combo c1, c2;
+			
+			public void widgetSelected(SelectionEvent event) {		
+												
+				Shell newGameShell = new Shell(shell);
+				newGameShell.setSize(250, 120);
+				GridLayout gd = new GridLayout();
+				gd.numColumns = 4;
+				gd.makeColumnsEqualWidth = false;
+				newGameShell.setLayout(gd);
+
+				Button b = new Button(newGameShell, SWT.CHECK);
+				b.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1 ,1 ));
+				Label size = new Label(newGameShell, SWT.NULL);
+				size.setText("Size: ");
+				size.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
 				
-				notifyObservers("generate maze " + hash + " 32 32");
+				String[] items = new String[36];
+				for(int i = 0; i < 36; i++)
+					items[i] = String.valueOf(i+15);
+				c1 =  new Combo(newGameShell, SWT.READ_ONLY);
+				c2 =  new Combo(newGameShell, SWT.READ_ONLY);
+				c1.setItems(items);
+				c1.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1,1));
+				c1.select(17);
+				c1.setEnabled(false);
+				c2.setItems(retrieveItems());
+				c2.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1,1));
+				c2.select(4);
+				c2.setEnabled(false);
+				
+				Label hidden1 = new Label(newGameShell, SWT.NULL);
+				hidden1.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+				Label name = new Label(newGameShell, SWT.NULL);
+				name.setText("Name: ");
+				name.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+				Text t = new Text(newGameShell, SWT.BORDER | SWT.SINGLE);
+				t.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1));
+				
+				Button okButton = new Button(newGameShell, SWT.PUSH);
+				GridData okGD = new GridData(GridData.FILL, GridData.CENTER, false, false, 4, 1);
+				okButton.setLayoutData(okGD);
+				okButton.setText("&OK");
+				
+				newGameShell.setText("New Game");
+				newGameShell.open();
+			
+				b.addSelectionListener(new SelectionAdapter(){
+
+					public void widgetSelected(SelectionEvent e) {
+						if(!c1.isEnabled()){
+							c1.setEnabled(true);
+							c2.setEnabled(true);
+						}
+						else{
+							c1.setEnabled(false);
+							c2.setEnabled(false);
+						}
+					}
+				});
+				
+				okButton.addSelectionListener(new SelectionAdapter(){
+					
+					public void widgetSelected(SelectionEvent e) {
+						
+						if(t.getCharCount() == 0)
+							return;
+						Point mazeSize = new Point(Integer.parseInt(c1.getItem(c1.getSelectionIndex())), 
+								Integer.parseInt(c2.getItem(c2.getSelectionIndex())));
+						try {
+							mazeName = URLEncoder.encode(t.getText(), "UTF-8");
+						} catch (UnsupportedEncodingException e1) {e1.printStackTrace();}
+												
+						newGameShell.dispose();
+						notifyObservers("generate maze " + mazeName + " " + mazeSize.x + " " + mazeSize.y);
+					}
+				});
+				
+				c1.addSelectionListener(new SelectionAdapter(){
+					public void widgetSelected(SelectionEvent e) {
+						c2.setItems(retrieveItems());
+						c2.select(4);
+					}
+				});
+				
+				shell.setEnabled(false);
+				while(!newGameShell.isDisposed()){
+					if(!newGameShell.getDisplay().readAndDispatch())
+						newGameShell.getDisplay().sleep();
+				}
+				
+				shell.setEnabled(true);
+				shell.setFocus();
 			}
 			
+			String[] retrieveItems(){
+				
+				String[] items = new String[9];
+				
+				for(int i = -4; i < 5; i++){
+					items[i+4] = String.valueOf(i + Integer.valueOf(c1.getItem(c1.getSelectionIndex())));
+				}
+				
+				return items;
+			}
+		});
+		
+		buttonLoadGame.addSelectionListener(new SelectionAdapter(){
+			
+			public void widgetSelected(SelectionEvent event){
+				
+				Shell loadGameShell = new Shell(shell);
+				loadGameShell.setSize(250, 90);
+				GridLayout gd = new GridLayout();
+				gd.numColumns = 2;
+				gd.makeColumnsEqualWidth = false;
+				loadGameShell.setLayout(gd);
+				
+				Label name = new Label(loadGameShell, SWT.NULL);
+				name.setText("Name: ");
+				name.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+				Text t = new Text(loadGameShell, SWT.BORDER | SWT.SINGLE);
+				t.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
+				
+				Button okButton = new Button(loadGameShell, SWT.PUSH);
+				GridData okGD = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
+				okButton.setLayoutData(okGD);
+				okButton.setText("&OK");
+				
+				loadGameShell.setText("Load Game");
+				loadGameShell.open();
+				
+				
+				okButton.addSelectionListener(new SelectionAdapter(){
+					
+					public void widgetSelected(SelectionEvent e){
+						try {
+							mazeName = URLEncoder.encode(t.getText(), "UTF-8");
+						} catch (UnsupportedEncodingException e1) {e1.printStackTrace();}
+						loadGameShell.dispose();
+						notifyObservers("display maze " + mazeName);
+					}
+				});				
+				
+				shell.setEnabled(false);
+				while(!loadGameShell.isDisposed()){
+					if(!loadGameShell.getDisplay().readAndDispatch())
+						loadGameShell.getDisplay().sleep();
+				}
+				
+				shell.setEnabled(true);
+				shell.setFocus();
+			}
 		});
 		
 		buttonStopGame.addSelectionListener(new SelectionAdapter(){
@@ -121,6 +274,7 @@ public class GUI extends BasicWindow implements View {
 					creditsItem.setEnabled(true);
 				shell.setMenuBar(menuBar);
 				buttonNewGame.setEnabled(true);
+				buttonLoadGame.setEnabled(true);
 				buttonStopGame.setVisible(false);
 				buttonStopGame.setEnabled(false);
 				buttonGetClue.setVisible(false);
@@ -139,8 +293,7 @@ public class GUI extends BasicWindow implements View {
 				clues++;
 				if(clues == 3)
 					buttonGetClue.setEnabled(false);
-				
-				notifyObservers("solve maze " + hash + " " + md.getCharPosistion() + " " + md.getGoalPosistion());				
+				notifyObservers("solve maze " + mazeName + " " + md.getCharPosistion() + " " + md.getGoalPosistion());				
 			}
 		});
 		
@@ -204,6 +357,7 @@ public class GUI extends BasicWindow implements View {
 			md.setMaze(maze);
 			md.start();
 			buttonNewGame.setEnabled(false);
+			buttonLoadGame.setEnabled(false);
 			buttonStopGame.setVisible(true);
 			buttonStopGame.setEnabled(true);
 			buttonGetClue.setVisible(true);
@@ -220,6 +374,7 @@ public class GUI extends BasicWindow implements View {
 	@Override
 	public void displayError(String err) {
 		Shell errShell = new Shell(shell);
+		errShell.setText("ERROR");
 		errShell.setSize(200, 100);
 		errShell.setLayout(new GridLayout(1,false));
 		errShell.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false , true, 1, 1));

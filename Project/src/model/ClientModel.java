@@ -41,32 +41,49 @@ public class ClientModel extends Observable implements Model {
 			connect();
 		
 		if(connected){
-		outToServer.println("genmaze " + name + " " + rows + " " + cols);
-		outToServer.flush();
-		notifyObservers("maze");
+			outToServer.println("genmaze " + name + " " + rows + " " + cols);
+			outToServer.flush();
+			boolean flag = false;
+			try {
+				flag = ois.readBoolean();
+			} catch (IOException e) {e.printStackTrace();}
+			if(flag)
+				notifyObservers("maze");
+			else 
+				notifyObservers("already exists");
 		}
-		
 		else
 			notifyObservers("not connected");
 	}
 
 	@Override
 	public Maze getMaze(String name) {
+		if(!connected)
+			connect();
+		
 		Maze m = null;
 		if(connected){
 			try {
 			outToServer.println("getmaze " + name);
 			outToServer.flush();
-					
-			Compressor c = new HuffmanAlg();
-			ByteArrayInputStream bais = new ByteArrayInputStream(c.decompress(Base64.getDecoder().decode
-					(((String) ois.readObject()).getBytes())));
-			ObjectInputStream objIn = new ObjectInputStream(bais);
-			objIn.close();
 			
-			m = (Maze) objIn.readObject();
+			boolean flag = false;
+			flag = ois.readBoolean();
+			if(flag){
+				Compressor c = new HuffmanAlg();
+				ByteArrayInputStream bais = new ByteArrayInputStream(c.decompress(Base64.getDecoder().decode
+						(((String) ois.readObject()).getBytes())));
+				ObjectInputStream objIn = new ObjectInputStream(bais);
+				objIn.close();
+				
+				m = (Maze) objIn.readObject();
+			}
+			else
+				notifyObservers("doesn't exists");
 			} catch (ClassNotFoundException | IOException e) {e.printStackTrace();}
 		}
+		else
+			notifyObservers("not connected");
 		return m;
 	}
 

@@ -1,5 +1,4 @@
 package boot;
-
 //
 //	By: Or Ginath 205928161
 //      
@@ -25,4 +24,4 @@ public class Run {
 	}
 }
 
-//TODO: load maze (sort out name situation), congrats screen
+//TODO: load maze locations, credits, instructions
