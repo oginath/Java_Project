@@ -53,7 +53,7 @@ public interface View {
 	 *
 	 * @param m The maze to be displayed.
 	 */
-	void displayMaze(Maze m);
+	void displayMaze(Maze m, String s);
 	
 	/**
 	 * Display solution.

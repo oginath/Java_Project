@@ -31,6 +31,7 @@ public interface Model {
 	 */
 	Maze getMaze(String name);
 
+	String getPositions(String name);
 	/**
 	 * Solve maze.
 	 * 

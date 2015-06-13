@@ -44,8 +44,6 @@ import org.eclipse.swt.widgets.Shell;
 import algorithms.mazeGenerators.Cell;
 import algorithms.mazeGenerators.Directions;
 import algorithms.mazeGenerators.Maze;
-import algorithms.search.Searchable;
-import algorithms.search.SearchableMaze;
 import algorithms.search.Solution;
 
 public class MazeBoard extends Canvas {
@@ -132,14 +130,14 @@ public class MazeBoard extends Canvas {
 		}
 
 		map = new HashMap<Point, Point>();
-		Searchable s = new SearchableMaze(mazeData, true);
-		String[] start = s.getStartState().getState().split(" ");
-		sX = Integer.parseInt(start[0]);
-		sY = Integer.parseInt(start[1]);
-		
-		String[] goal = s.getGoalState().getState().split(" ");
-		gX = Integer.parseInt(goal[0]);
-		gY = Integer.parseInt(goal[1]);
+//		Searchable s = new SearchableMaze(mazeData, true);
+//		String[] start = s.getStartState().getState().split(" ");
+//		sX = Integer.parseInt(start[0]);
+//		sY = Integer.parseInt(start[1]);
+//		
+//		String[] goal = s.getGoalState().getState().split(" ");
+//		gX = Integer.parseInt(goal[0]);
+//		gY = Integer.parseInt(goal[1]);
 
 		int counter = 0;
 		if (mazeData.getCols() * mazeData.getRows() > 250) {
@@ -225,10 +223,10 @@ public class MazeBoard extends Canvas {
 
 				for (int j = 0; j < mazeData.getCols(); j++) {
 					// e.gc.drawLine(j * w, 0, (j + 1) * w, 0);
-					if (Math.abs(j - sX) < radius * 2 / w
-							&& Math.abs(0 - sY) < radius * 2 / h
-							|| Math.abs(j - gX) < r * 2 / w
-							&& Math.abs(0 - gY) < r * 2 / h || won)
+					if (Math.abs(j - sX)*w < radius * 2
+							&& Math.abs(0 - sY)*h < radius * 2
+							|| Math.abs(j - gX)*w < r * 2
+							&& Math.abs(0 - gY)*h < r * 2 || won)
 						e.gc.drawImage(mazeTile, 0, 0,
 								mazeTile.getBounds().width,
 								mazeTile.getBounds().height, j * w, 0, w, h / 3);
@@ -236,10 +234,10 @@ public class MazeBoard extends Canvas {
 
 				for (int i = 0; i < mazeData.getRows(); i++) {
 					// e.gc.drawLine(0, i * h, 0, (i + 1) * h);
-					if (Math.abs(0 - sX) < radius * 2 / w
-							&& Math.abs(i - sY) < radius * 2 / h
-							|| Math.abs(0 - gX) < r * 2 / w
-							&& Math.abs(i - gY) < r * 2 / h || won)
+					if (Math.abs(0 - sX)*w < radius * 2
+							&& Math.abs(i - sY)*h < radius * 2
+							|| Math.abs(0 - gX)*w < r * 2
+							&& Math.abs(i - gY)*h < r * 2 || won)
 						e.gc.drawImage(mazeTile, 0, 0,
 								mazeTile.getBounds().width,
 								mazeTile.getBounds().height, 0, i * h, w / 5, h);
@@ -253,11 +251,10 @@ public class MazeBoard extends Canvas {
 						map.put(xy, ij);
 
 						Cell cell = mazeData.getMatrix()[i][j];
-
-						if ((Math.abs(j - sX) < radius * 2 / w && Math.abs(i
-								- sY) < radius * 2 / h)
-								|| Math.abs(j - gX) < r * 2 / w
-								&& Math.abs(i - gY) < r * 2 / h || won) {
+						if ((Math.abs(j - sX)*w < radius * 2 && Math.abs(i
+								- sY)*h < radius * 2)
+								|| Math.abs(j - gX)*w < r * 2
+								&& Math.abs(i - gY)*h < r * 2 || won) {
 							if (cell.isbBorder()) {
 								// e.gc.drawLine(x, y + h, (j + 1) * w, y + h);
 
@@ -287,10 +284,10 @@ public class MazeBoard extends Canvas {
 
 				for (int i = 0; i < totems.size(); i++) {
 					Point cur = totems.get(i);
-					if ((Math.abs(cur.x - sX) < radius * 2 / w && Math
-							.abs(cur.y - sY) < radius * 2 / h)
-							|| Math.abs(cur.x - gX) < r * 2 / w
-							&& Math.abs(cur.y - gY) < r * 2 / h || won)
+					if ((Math.abs(cur.x - sX)*w < radius * 2 && Math
+							.abs(cur.y - sY)*h < radius * 2)
+							|| Math.abs(cur.x - gX)*w < r * 2
+							&& Math.abs(cur.y - gY)*h < r * 2 || won)
 						e.gc.drawImage(totem, 0, 0, totem.getBounds().width,
 								totem.getBounds().height, cur.x * w, cur.y * h
 										+ h / 4, (int) (w - (w * 0.2)), h);
@@ -876,6 +873,16 @@ public class MazeBoard extends Canvas {
 		return clip;
 	}
 
+	public void setPositions(String s){
+		
+		String[] sp = s.split(" ");
+		sX = Integer.parseInt(sp[0]);
+		sY = Integer.parseInt(sp[1]);
+		
+		gX = Integer.parseInt(sp[2]);
+		gY = Integer.parseInt(sp[3]);		
+	}
+	
 	public String getCharPosistion() {
 		return sX + " " + sY;
 	}

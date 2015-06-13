@@ -24,4 +24,4 @@ public class Run {
 	}
 }
 
-//TODO: load maze locations, credits, instructions
+//TODO: credits, instructions

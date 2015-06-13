@@ -86,12 +86,28 @@ public class ClientModel extends Observable implements Model {
 			notifyObservers("not connected");
 		return m;
 	}
-
 	@Override
-	public void solveMaze(String arg) {
-		outToServer.println("solmaze " + arg);
+	public String getPositions(String name){
+		String pos = null;
+		try {
+		outToServer.println("getpos " + name);
 		outToServer.flush();
 		
+		pos = (String) ois.readObject();
+		
+		} catch (IOException | ClassNotFoundException e) {e.printStackTrace();}
+		
+		return pos;
+	}
+	@Override
+	public void solveMaze(String arg) {
+		if(!connected)
+			connect();
+		
+		if(connected){
+			outToServer.println("solmaze " + arg);
+			outToServer.flush();
+		}
 		notifyObservers("solution");
 	}
 

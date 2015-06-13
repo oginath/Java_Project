@@ -63,7 +63,7 @@ public class CLIView extends Observable implements View {
 	 * Displays the maze to the screen using the class maze' print method.
 	 */
 	@Override
-	public void displayMaze(Maze m) {
+	public void displayMaze(Maze m, String s) {
 		m.print();
 	}
 

@@ -1,6 +1,5 @@
 package presenter;
 
-import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -21,9 +20,6 @@ public class Presenter implements Observer {
 
 	/** The View. */
 	View v;
-
-	/** The list of names. */
-	LinkedList<String> nlist;
 	
 	String latestMaze;
 
@@ -39,7 +35,6 @@ public class Presenter implements Observer {
 	public Presenter(View v, Model m) {
 		this.v = v;
 		this.m = m;
-		this.nlist = new LinkedList<String>();
 
 		v.setCommands("generate maze", new generateMazeCommand());
 		v.setCommands("display maze", new displayMazeCommand());
@@ -88,10 +83,10 @@ public class Presenter implements Observer {
 		if (o == m) {
 			switch((String)(obj)){
 			case "maze":
-				latestMaze = nlist.poll();
 				Maze maze = m.getMaze(latestMaze);
+				String str = m.getPositions(latestMaze);
 				if(maze != null)
-					v.displayMaze(maze);
+					v.displayMaze(maze, str);
 				break;
 				
 			case "solution":
@@ -174,8 +169,9 @@ public class Presenter implements Observer {
 //					System.out.println("Maze with this name already exists!");
 //					return;
 //				}
-				nlist.add(args[0]);
-
+				
+			latestMaze = args[0];
+			
 				int rows = Integer.parseInt(args[1]);
 				int cols = Integer.parseInt(args[2]);
 
@@ -202,8 +198,9 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand(String mName) {
 			Maze maze = m.getMaze(mName);
+			String s = m.getPositions(mName);
 			if(maze != null)
-				v.displayMaze(maze);
+				v.displayMaze(maze, s);
 		}
 	}
 

@@ -291,8 +291,8 @@ public class GUI extends BasicWindow implements View {
 					return;
 				}
 				clues++;
-				if(clues == 3)
-					buttonGetClue.setEnabled(false);
+				//if(clues == 3)
+					//buttonGetClue.setEnabled(false);
 				notifyObservers("solve maze " + mazeName + " " + md.getCharPosistion() + " " + md.getGoalPosistion());				
 			}
 		});
@@ -350,10 +350,11 @@ public class GUI extends BasicWindow implements View {
 	}
 
 	@Override
-	public void displayMaze(Maze m) {	
+	public void displayMaze(Maze m, String s) {	
 		this.maze = m;
 		if(m!= null){
 			shell.setMenuBar(null);
+			md.setPositions(s);
 			md.setMaze(maze);
 			md.start();
 			buttonNewGame.setEnabled(false);
