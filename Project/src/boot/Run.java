@@ -23,5 +23,3 @@ public class Run {
 		
 	}
 }
-
-//TODO: credits, instructions

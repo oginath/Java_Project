@@ -5,7 +5,7 @@
    <class>view.SWT.GUI</class>
   </void>
   <void property="address">
-   <string>localhost</string>
+   <string>10.211.55.3</string>
   </void>
   <void property="port">
    <int>5400</int>
