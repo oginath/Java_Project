@@ -46,7 +46,7 @@ import algorithms.mazeGenerators.Directions;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 
-public class MazeBoard extends Canvas {
+public class MazeBoard extends Canvas implements GameBoard {
 
 	private GameCharacter gameChar;
 	private int w, h;
@@ -91,8 +91,9 @@ public class MazeBoard extends Canvas {
 
 		TitleScreen();
 	}
-
-	void start() {
+	
+	@Override
+	public void start() {
 
 		won = false;
 		stopped = false;
@@ -681,7 +682,8 @@ public class MazeBoard extends Canvas {
 		stop();
 	}
 
-	void stop() {
+	@Override
+	public void stop() {
 		if (!shell.isDisposed())
 			shell.dispose();
 		removePaintListener(paintListener);
@@ -821,7 +823,8 @@ public class MazeBoard extends Canvas {
 		}
 	}
 
-	void insertClue(Solution sol) {
+	@Override
+	public void insertClue(Solution sol) {
 		if (won)
 			return;
 		List<String> c = sol.getSoList();
