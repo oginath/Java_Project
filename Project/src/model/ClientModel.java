@@ -88,15 +88,21 @@ public class ClientModel extends Observable implements Model {
 	}
 	@Override
 	public String getPositions(String name){
+		if(!connected)
+			connect();
+		
 		String pos = null;
-		try {
-		outToServer.println("getpos " + name);
-		outToServer.flush();
-		
-		pos = (String) ois.readObject();
-		
-		} catch (IOException | ClassNotFoundException e) {e.printStackTrace();}
-		
+		if(connected){
+			try {
+			outToServer.println("getpos " + name);
+			outToServer.flush();
+			
+			pos = (String) ois.readObject();
+			
+			} catch (IOException | ClassNotFoundException e) {e.printStackTrace();}
+		}
+		else
+			notifyObservers("not connected");
 		return pos;
 	}
 	@Override
@@ -107,19 +113,28 @@ public class ClientModel extends Observable implements Model {
 		if(connected){
 			outToServer.println("solmaze " + arg);
 			outToServer.flush();
+			notifyObservers("solution");
 		}
-		notifyObservers("solution");
+		else
+			notifyObservers("not connected");
 	}
 
 	@Override
 	public Solution getSolution(String name) {
-		Solution sol = null;
-		try {
-		outToServer.println("getsol " + name);
-		outToServer.flush();			
+		if(!connected)
+			connect();
 		
-		sol = (Solution) ois.readObject();
-		} catch (ClassNotFoundException | IOException e) {e.printStackTrace();}
+		Solution sol = null;
+		if(connected){
+			try {
+			outToServer.println("getsol " + name);
+			outToServer.flush();			
+			
+			sol = (Solution) ois.readObject();
+			} catch (ClassNotFoundException | IOException e) {e.printStackTrace();}
+		}
+		else
+			notifyObservers("not connected");
 		return sol;
 	}
 

@@ -1,12 +1,27 @@
 package view.SWT;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Observer;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -22,6 +37,7 @@ import view.View;
 import view.CLI.MyCommands;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
+
 import commands.Command;
 
 public class GUI extends BasicWindow implements View {
@@ -32,7 +48,7 @@ public class GUI extends BasicWindow implements View {
 	Maze maze;
 	Menu menuBar, fileMenu, helpMenu;
 	MenuItem fileHeader, helpHeader;
-	MenuItem openFileItem, exitItem, helpItem, creditsItem;
+	MenuItem exitItem, helpItem, creditsItem;
 	Button buttonNewGame, buttonLoadGame, buttonStopGame, buttonGetClue;
 	int clues;
 	private MyCommands cmds;
@@ -58,9 +74,6 @@ public class GUI extends BasicWindow implements View {
 		fileHeader = new MenuItem(menuBar, SWT.CASCADE);
 		fileHeader.setText("&File");
 		fileHeader.setMenu(fileMenu);
-		
-		openFileItem = new MenuItem(fileMenu, SWT.PUSH);
-		openFileItem.setText("&Open File");
 		
 		exitItem = new MenuItem(fileMenu, SWT.PUSH);
 		exitItem.setText("&Exit");
@@ -291,8 +304,8 @@ public class GUI extends BasicWindow implements View {
 					return;
 				}
 				clues++;
-				//if(clues == 3)
-					//buttonGetClue.setEnabled(false);
+				if(clues == 3)
+					buttonGetClue.setEnabled(false);
 				notifyObservers("solve maze " + mazeName + " " + md.getCharPosistion() + " " + md.getGoalPosistion());				
 			}
 		});
@@ -301,21 +314,74 @@ public class GUI extends BasicWindow implements View {
 
 			public void widgetSelected(SelectionEvent e) {
 				Shell creditsShell = new Shell(shell);
-				creditsShell.setSize(300, 200);
+				creditsShell.setSize(300, 270);
 				creditsShell.open();
 				
 				if(md.getClip()!=null)
 					if(md.getClip().isActive())
 						md.getClip().stop();
+
+				Clip clip = null;
+				AudioInputStream ais = null;
+				try {
+					clip = AudioSystem.getClip();
+					ais = AudioSystem.getAudioInputStream(new File(
+							"resources/music/Congrats!.wav"));
+					clip.open(ais);
+				} catch (LineUnavailableException | UnsupportedAudioFileException| IOException error) {error.printStackTrace();}
+				clip.start();
+				
+				creditsShell.setBackground(display.getSystemColor(SWT.COLOR_DARK_GRAY));
+
+				Label label = new Label(creditsShell, SWT.CENTER);
+				label.setSize(210, 35);
+				label.setBackground(display.getSystemColor(SWT.COLOR_DARK_GRAY));
+				label.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
+				label.setLocation(40, 20);
+				FontData font = new FontData("Verdana", 12, SWT.ITALIC);
+				label.setFont(new Font(null, font));
+				label.setText("Credits");
+				
+				Label credits = new Label(creditsShell, SWT.NULL);
+				credits.setSize(300, 100);
+				credits.setBackground(display.getSystemColor(SWT.COLOR_DARK_GRAY));
+				credits.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
+				credits.setLocation(14, 160);
+				font = new FontData("Verdana", 8, SWT.BOLD);
+				credits.setFont(new Font(null, font));
+				credits.setText("Developer: Or Ginath\n"
+						+ "Sprites: Spelunky, spriters-resource.com\n"
+						+ "Music: Spelunky\n"
+						+ "Special thanks: Eliahu Khalastchi\n"
+						+ "Date: 16/06/2015");
+
+				try {
+				final Image image = new Image(null, new FileInputStream("resources/sprites/creditsSpelunky.png"));
+				creditsShell.addPaintListener(new PaintListener(){
+
+					@Override
+					public void paintControl(PaintEvent e) {
+
+						e.gc.drawImage(image, 0, 0, image.getBounds().width,image.getBounds().height, 
+								70, 60,(int)(image.getBounds().width*0.7), (int)(image.getBounds().height*0.7));
+					}
+					
+				});
+				Label s1 = new Label(creditsShell, SWT.SEPARATOR | SWT.SHADOW_OUT
+						| SWT.HORIZONTAL);
+				s1.setBounds(68, 110, 100, 2);
+				} catch (FileNotFoundException e1) {e1.printStackTrace();}
+
 				
 				shell.setEnabled(false);
 				while(!creditsShell.isDisposed()){
 					if(!creditsShell.getDisplay().readAndDispatch())
 						creditsShell.getDisplay().sleep();
 				}
-				
+			
+				clip.stop();
+				clip.close();
 				shell.setEnabled(true);
-				
 			}
 			
 		});
@@ -324,6 +390,36 @@ public class GUI extends BasicWindow implements View {
 			
 			public void widgetSelected(SelectionEvent e) {
 				shell.dispose();
+			}
+		});
+		
+		helpItem.addSelectionListener(new SelectionAdapter(){
+
+			public void widgetSelected(SelectionEvent e) {
+				Shell helpShell = new Shell(shell);
+				helpShell.setText("Instructions");
+				helpShell.setSize(400, 200);
+				helpShell.setLayout(new GridLayout(1, false));
+				helpShell.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false , true, 1, 1));
+				
+				Label l = new Label(helpShell, SWT.CENTER);
+				l.setText("Your goal is to get from the starting position to the Chest,\n"
+						+ "centered at the smaller circle.\n"
+						+ "The maze, and your starting and goal positions are \nrandomly generated at the start of every game.\n"
+						+ "Throughout the game, you will collect Totems, \nwhich will expand your line of sight.\n"
+						+ "You can also ask for clues, but be smart about it,\n as you only get 3 per game!");
+				
+				l.setLayoutData(new GridData(GridData.CENTER, GridData.CENTER, true, true, 1, 1));
+				helpShell.open();
+				
+				shell.setEnabled(false);
+				while(!helpShell.isDisposed()){
+					if(!helpShell.getDisplay().readAndDispatch())
+						helpShell.getDisplay().sleep();
+				}
+				
+				shell.setEnabled(true);
+				shell.setFocus();
 			}
 		});
 	}
