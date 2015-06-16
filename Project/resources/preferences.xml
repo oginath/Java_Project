@@ -2,7 +2,7 @@
 <java version="1.8.0_31" class="java.beans.XMLDecoder">
  <object class="presenter.Preferences">
   <void property="UI">
-   <class>view.SWT.GUI</class>
+   <class>view.GUI</class>
   </void>
   <void property="address">
    <string>10.211.55.3</string>

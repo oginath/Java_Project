@@ -4,7 +4,6 @@ import presenter.Preferences;
 import presenter.Presenter;
 import view.View;
 
-
 public class Run {
 
 	public static void main(String[] args) {
@@ -18,6 +17,5 @@ public class Run {
 	
 		v.start();
 		m.stop();
-		
 	}
 }

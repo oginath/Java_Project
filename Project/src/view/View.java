@@ -6,7 +6,6 @@ import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 import commands.Command;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface View.
  */

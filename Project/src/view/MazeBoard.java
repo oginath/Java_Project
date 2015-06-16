@@ -50,9 +50,9 @@ import algorithms.search.Solution;
  * The Class MazeBoard.
  * Represent a game board of a maze.
  * This class is quite complex. It 
- * contains a consirable amount of 
+ * contains a considerable amount of 
  * data members because of the need 
- * to acssess them from different methods.
+ * to access them from different methods.
  */
 public class MazeBoard extends Canvas implements GameBoard {
 
@@ -149,8 +149,9 @@ public class MazeBoard extends Canvas implements GameBoard {
 	
 	/**
 	 * Starts a new game.
-	 * Loads all the nesecassary 
-	 * 
+	 * Loads all the necessary images and audio, clips
+	 * Paints only what's inside the radius of either the player or
+	 * the chest.
 	 */
 	@Override
 	public void start() {
@@ -550,9 +551,11 @@ public class MazeBoard extends Canvas implements GameBoard {
 	}
 
 	/**
-	 * Move char.
+	 * This method moves the character.
+	 * It's supposed to be used by both the key & 
+	 * mouse listeners to prevent duplicate code.
 	 *
-	 * @param dir the dir
+	 * @param dir The direction which the character should move to
 	 */
 	@SuppressWarnings("incomplete-switch")
 	private void moveChar(Directions dir){
@@ -677,10 +680,10 @@ public class MazeBoard extends Canvas implements GameBoard {
 	}
 	
 	/**
-	 * Change region.
+	 * This method moves the circle.
 	 *
-	 * @param x the x
-	 * @param y the y
+	 * @param x The new x location
+	 * @param y The new y location
 	 */
 	private void changeRegion(int x, int y) {
 		if (!shell.isDisposed()) {
@@ -704,7 +707,7 @@ public class MazeBoard extends Canvas implements GameBoard {
 	}
 
 	/**
-	 * Congrats.
+	 * Opens the window at the end of the game.
 	 */
 	private void congrats() {
 		won = true;
@@ -756,8 +759,8 @@ public class MazeBoard extends Canvas implements GameBoard {
 		stop();
 	}
 
-	/* (non-Javadoc)
-	 * @see view.SWT.GameBoard#stop()
+	/**
+	 * Stops the game - should work with in conjunction with a stop button of sorts. 
 	 */
 	@Override
 	public void stop() {
@@ -780,10 +783,9 @@ public class MazeBoard extends Canvas implements GameBoard {
 	}
 
 	/**
-	 * Title screen.
+	 * Displays the Title screen.
 	 */
 	void TitleScreen() {
-
 		try {
 			final Image title = new Image(null, new FileInputStream(
 					"resources/sprites/titleSpelunky.png"));
@@ -903,8 +905,10 @@ public class MazeBoard extends Canvas implements GameBoard {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see view.SWT.GameBoard#insertClue(algorithms.search.Solution)
+	/**
+	 * Gets a solution, converts it to a clue, and initiates the clue list which allows clues to be displayed.
+	 * 
+	 * @param sol The solution to the sent problem
 	 */
 	@Override
 	public void insertClue(Solution sol) {
@@ -946,32 +950,32 @@ public class MazeBoard extends Canvas implements GameBoard {
 	/**
 	 * Sets the maze.
 	 *
-	 * @param m the new maze
+	 * @param m The new maze
 	 */
 	void setMaze(Maze m) {
 		this.mazeData = m;
 	}
 
 	/**
-	 * Checks if is stopped.
+	 * Checks if the game is stopped.
 	 *
-	 * @return true, if is stopped
+	 * @return true, if the game is stopped 
 	 */
 	public boolean isStopped() {
 		return stopped;
 	}
 
 	/**
-	 * Checks if is won.
+	 * Checks if the game was won.
 	 *
-	 * @return true, if is won
+	 * @return true, if the game was won
 	 */
 	public boolean isWon() {
 		return won;
 	}
 
 	/**
-	 * Gets the clip.
+	 * Gets the Audio clip.
 	 *
 	 * @return the clip
 	 */
@@ -980,9 +984,9 @@ public class MazeBoard extends Canvas implements GameBoard {
 	}
 
 	/**
-	 * Sets the positions.
+	 * Sets the positions of the character and the chest.
 	 *
-	 * @param s the new positions
+	 * @param s The new positions
 	 */
 	public void setPositions(String s){
 		
@@ -995,30 +999,30 @@ public class MazeBoard extends Canvas implements GameBoard {
 	}
 	
 	/**
-	 * Gets the char posistion.
+	 * Gets the character position.
 	 *
-	 * @return the char posistion
+	 * @return The character position
 	 */
-	public String getCharPosistion() {
+	public String getCharPosition() {
 		return sX + " " + sY;
 	}
 
 	/**
-	 * Gets the goal posistion.
+	 * Gets the chest's position.
 	 *
-	 * @return the goal posistion
+	 * @return The chest's position
 	 */
-	public String getGoalPosistion() {
+	public String getGoalPosition() {
 		return gX + " " + gY;
 	}
 
 	/**
-	 * Circle.
+	 *  Creates a Circle, as set by the parameters.
 	 *
-	 * @param r the r
-	 * @param offsetX the offset x
-	 * @param offsetY the offset y
-	 * @return the int[]
+	 * @param r The required radius
+	 * @param offsetX The offset x
+	 * @param offsetY The offset y
+	 * @return the int array representing the circle.
 	 */
 	private static int[] circle(int r, int offsetX, int offsetY) {
 		int[] polygon = new int[8 * r + 4];

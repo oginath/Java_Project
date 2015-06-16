@@ -5,7 +5,6 @@ import java.util.Observer;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface Model.
  */
@@ -73,8 +72,4 @@ public interface Model {
 	 * A method to be overridden.
 	 */
 	void stop();
-
-//	boolean isMazeExist(String name);
-//
-//	void insertMaze(Maze m, String name);
 }

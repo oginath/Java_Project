@@ -3,7 +3,6 @@ package view;
 import commands.Command;
 import commands.UserCommands;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MyCommands.
  */

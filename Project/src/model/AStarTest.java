@@ -9,7 +9,6 @@ import algorithms.search.SearchableMaze;
 import algorithms.search.Searcher;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AStarTest.
  */
@@ -28,17 +27,17 @@ public class AStarTest {
 	 * Instantiates a new a star test.
 	 */
 	public AStarTest() {
-		 m = new RecursiveBacktrackerMazeGenerator().generateMaze(60, 60);
+		 m = new RecursiveBacktrackerMazeGenerator().generateMaze(60, 60); // It's quite insightful to see the speed of AStar on different sized mazes
 		 s = new SearchableMaze(m, true);	
 		 searcher = new AStar(new MazeEuclideanDistance());
 	}
 	
 	/**
-	 * A star solving test.
+	 * Astar solving test.
+	 * test the speed of the algorithm.
 	 */
 	@Test(timeout = 100)
 	public void AStarSolvingTest(){
-		// Testing A*'s speed 
 		searcher.search(s);
 	}
 }

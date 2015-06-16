@@ -10,7 +10,6 @@ import algorithms.search.Solution;
 
 import commands.Command;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Presenter.
  */
@@ -147,8 +146,6 @@ public class Presenter implements Observer {
 		}
 	}
 
-	// ##################### Commands:
-
 	/**
 	 * The Class generateMazeCommand.
 	 */
@@ -167,12 +164,7 @@ public class Presenter implements Observer {
 		public void doCommand(String arg) {
 			String[] args = arg.split(" ");
 			if (args.length == 3) {
-//				if (m.isMazeExist(args[0])) {
-//					System.out.println("Maze with this name already exists!");
-//					return;
-//				}
-				
-			latestMaze = args[0];
+				latestMaze = args[0];
 			
 				int rows = Integer.parseInt(args[1]);
 				int cols = Integer.parseInt(args[2]);
@@ -222,15 +214,6 @@ public class Presenter implements Observer {
 		 */
 		@Override
 		public void doCommand(String mName) {
-//			String[] s = mName.split(" ");
-//			Maze maze = m.getMaze(s[0]);
-//			SearchableMaze sm = new SearchableMaze(maze, false);
-//			if(s.length > 1){
-//				MazeState sState = new MazeState(s[1] + " " + s[2]);
-//				MazeState gState = new MazeState(s[3] + " " + s[4]);
-//				sm.setStartState(sState);
-//				sm.setgState(gState);
-//			}
 			m.solveMaze(mName);
 		}
 	}

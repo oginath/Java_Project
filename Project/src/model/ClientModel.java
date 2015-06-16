@@ -17,7 +17,6 @@ import algorithms.search.Solution;
 import compression_algorithms.Compressor;
 import compression_algorithms.HuffmanAlg;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ClientModel.
  */
@@ -26,7 +25,7 @@ public class ClientModel extends Observable implements Model {
 	/** The Observers. */
 	ArrayList<Observer> Observers;
 	
-	/** The my server. */
+	/** The Socket representing the server. */
 	Socket myServer;
 	
 	/** The ois. */
@@ -47,8 +46,8 @@ public class ClientModel extends Observable implements Model {
 	/**
 	 * Instantiates a new client model.
 	 *
-	 * @param port the port
-	 * @param address the address
+	 * @param port The port
+	 * @param address The address
 	 */
 	public ClientModel(int port, String address) {
 		connected = false;
@@ -58,8 +57,16 @@ public class ClientModel extends Observable implements Model {
 		this.address = address;
 	}
 	
-	/* (non-Javadoc)
-	 * @see model.Model#generateMaze(java.lang.String, int, int)
+	/**
+	 * If not connected to the server, connect.
+	 * 
+	 * Asks the server to generate a maze with the parameters.
+	 *
+	 * If the server returns that the generation was successful, notifies the observers.
+	 *
+	 * @param name The name of the maze to be generated
+	 * @param rows The number of rows in the maze to be generated
+	 * @param cols The number of columns in the maze to be generated
 	 */
 	@Override
 	public void generateMaze(String name, int rows, int cols) {
@@ -81,9 +88,13 @@ public class ClientModel extends Observable implements Model {
 		else
 			notifyObservers("not connected");
 	}
-
-	/* (non-Javadoc)
-	 * @see model.Model#getMaze(java.lang.String)
+	
+	/**
+	 * If not connected to the server, connect.
+	 * 
+	 * Asks the server to return a maze with the specified name.
+	 * 
+	 * @param name The name of the required maze
 	 */
 	@Override
 	public Maze getMaze(String name) {
@@ -116,8 +127,14 @@ public class ClientModel extends Observable implements Model {
 		return m;
 	}
 	
-	/* (non-Javadoc)
-	 * @see model.Model#getPositions(java.lang.String)
+	/**
+	 * If not connected to the server, connect.
+	 * 
+	 * Asks the server to return starting and end points for a maze.
+	 * 
+	 * @param name The name of the maze that the required parameters are for.
+	 * 
+	 * @return The parameters from the server.
 	 */
 	@Override
 	public String getPositions(String name){
@@ -139,16 +156,20 @@ public class ClientModel extends Observable implements Model {
 		return pos;
 	}
 	
-	/* (non-Javadoc)
-	 * @see model.Model#solveMaze(java.lang.String)
+	/**
+	 * If not connected to the server, connect.
+	 * 
+	 * Asks the server to solve a maze with the specified name.
+	 * 
+	 * @param name The name of the maze to solve
 	 */
 	@Override
-	public void solveMaze(String arg) {
+	public void solveMaze(String name) {
 		if(!connected)
 			connect();
 		
 		if(connected){
-			outToServer.println("solmaze " + arg);
+			outToServer.println("solmaze " + name);
 			outToServer.flush();
 			notifyObservers("solution");
 		}
@@ -156,8 +177,12 @@ public class ClientModel extends Observable implements Model {
 			notifyObservers("not connected");
 	}
 
-	/* (non-Javadoc)
-	 * @see model.Model#getSolution(java.lang.String)
+	/**
+	 * If not connected to the server, connect.
+	 * 
+	 * Asks the server to return a solution for the maze with the specified name.
+	 * 
+	 * @param name The name of the required maze which the solution is for
 	 */
 	@Override
 	public Solution getSolution(String name) {
@@ -180,6 +205,8 @@ public class ClientModel extends Observable implements Model {
 
 	/**
 	 * Connect.
+	 * 
+	 * Tries to connect to a server with the set port and address.
 	 */
 	public void connect(){
 		try {
@@ -192,8 +219,11 @@ public class ClientModel extends Observable implements Model {
 		} catch (IOException e) {connected = false;}
 	}
 	
-	/* (non-Javadoc)
-	 * @see model.Model#stop()
+	/**
+	 *
+	 * Tells the server that this client is going to disconnect, 
+	 * and closes the socket and all the streams.
+	 * 
 	 */
 	@Override
 	public void stop() {
@@ -209,8 +239,23 @@ public class ClientModel extends Observable implements Model {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Observable#notifyObservers(java.lang.Object)
+	/**
+	 * Add Observer.
+	 * 
+	 * @param o
+	 *            adds the observer to this the observers list.
+	 */
+	@Override
+	public synchronized void addObserver(Observer o) {
+		this.Observers.add(o);
+	}
+	
+	/**
+	 * Notify Observers.
+	 * 
+	 * notify the observers.
+	 *
+	 * @param obj An object to pass to the observers.
 	 */
 	@Override
 	public void notifyObservers(Object arg) {
@@ -218,13 +263,4 @@ public class ClientModel extends Observable implements Model {
 			observer.update(this, arg);
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.util.Observable#addObserver(java.util.Observer)
-	 */
-	@Override
-	public synchronized void addObserver(Observer o) {
-		this.Observers.add(o);
-	}
-
 }

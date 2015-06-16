@@ -9,7 +9,6 @@ import java.io.Serializable;
 
 import view.View;
 
-// TODO: Auto-generated Javadoc
 /**
  * 
  * The Class Preferences.
@@ -24,7 +23,7 @@ public class Preferences implements Serializable {
 	/** The address. */
 	private String address;
 	
-	/** The ui. */
+	/** The User interface. */
 	private Class<? extends View> ui;
 	
 	/**
@@ -64,27 +63,27 @@ public class Preferences implements Serializable {
 	}
 	
 	/**
-	 * Gets the ui.
+	 * Gets the UI.
 	 *
-	 * @return the ui
+	 * @return the UI
 	 */
 	public Class<? extends View> getUI() {
 		return ui;
 	}
 	
 	/**
-	 * Sets the ui.
+	 * Sets the UI.
 	 *
-	 * @param ui the new ui
+	 * @param ui the new UI
 	 */
 	public void setUI(Class<? extends View> ui) {
 		this.ui = ui;
 	}
 	
 	/**
-	 * Gets the view.
+	 * Returns a new View object from the saved Class object
 	 *
-	 * @return the view
+	 * @return The view object
 	 */
 	public View getView(){
 		try {
