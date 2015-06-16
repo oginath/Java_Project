@@ -6,6 +6,7 @@ import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 import commands.Command;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Interface View.
  */
@@ -30,9 +31,10 @@ public interface View {
 	
 	/**
 	 * Gets the user command.
-	 *
+	 * 
 	 * a method to overridden.
 	 *
+	 * @param command the command
 	 * @return The user command
 	 */
 	Command getUserCommand(String command);
@@ -42,16 +44,18 @@ public interface View {
 	 * 
 	 * a method to overridden.
 	 *
+	 * @param arg the arg
 	 * @return The user argument
 	 */
 	String getUserArg(String arg);
 	
 	/**
 	 * Display maze.
-	 *
+	 * 
 	 * a method to overridden.
 	 *
 	 * @param m The maze to be displayed.
+	 * @param s the s
 	 */
 	void displayMaze(Maze m, String s);
 	
@@ -62,8 +66,18 @@ public interface View {
 	 */
 	void displaySolution(Solution s);
 	
+	/**
+	 * Display error.
+	 *
+	 * @param err the err
+	 */
 	void displayError(String err);
 		
+	/**
+	 * Adds the observer.
+	 *
+	 * @param o the o
+	 */
 	void addObserver(Observer o);
 	
 }

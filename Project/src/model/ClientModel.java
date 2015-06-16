@@ -17,16 +17,39 @@ import algorithms.search.Solution;
 import compression_algorithms.Compressor;
 import compression_algorithms.HuffmanAlg;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ClientModel.
+ */
 public class ClientModel extends Observable implements Model {
 
+	/** The Observers. */
 	ArrayList<Observer> Observers;
+	
+	/** The my server. */
 	Socket myServer;
+	
+	/** The ois. */
 	ObjectInputStream ois;
+	
+	/** The out to server. */
 	PrintWriter outToServer;
+	
+	/** The connected. */
 	boolean connected;
+	
+	/** The port. */
 	int port;
+	
+	/** The address. */
 	String address;
 	
+	/**
+	 * Instantiates a new client model.
+	 *
+	 * @param port the port
+	 * @param address the address
+	 */
 	public ClientModel(int port, String address) {
 		connected = false;
 		Observers = new ArrayList<Observer>();
@@ -35,6 +58,9 @@ public class ClientModel extends Observable implements Model {
 		this.address = address;
 	}
 	
+	/* (non-Javadoc)
+	 * @see model.Model#generateMaze(java.lang.String, int, int)
+	 */
 	@Override
 	public void generateMaze(String name, int rows, int cols) {
 		if(!connected)
@@ -56,6 +82,9 @@ public class ClientModel extends Observable implements Model {
 			notifyObservers("not connected");
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#getMaze(java.lang.String)
+	 */
 	@Override
 	public Maze getMaze(String name) {
 		if(!connected)
@@ -86,6 +115,10 @@ public class ClientModel extends Observable implements Model {
 			notifyObservers("not connected");
 		return m;
 	}
+	
+	/* (non-Javadoc)
+	 * @see model.Model#getPositions(java.lang.String)
+	 */
 	@Override
 	public String getPositions(String name){
 		if(!connected)
@@ -105,6 +138,10 @@ public class ClientModel extends Observable implements Model {
 			notifyObservers("not connected");
 		return pos;
 	}
+	
+	/* (non-Javadoc)
+	 * @see model.Model#solveMaze(java.lang.String)
+	 */
 	@Override
 	public void solveMaze(String arg) {
 		if(!connected)
@@ -119,6 +156,9 @@ public class ClientModel extends Observable implements Model {
 			notifyObservers("not connected");
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#getSolution(java.lang.String)
+	 */
 	@Override
 	public Solution getSolution(String name) {
 		if(!connected)
@@ -138,6 +178,9 @@ public class ClientModel extends Observable implements Model {
 		return sol;
 	}
 
+	/**
+	 * Connect.
+	 */
 	public void connect(){
 		try {
 			myServer = new Socket(this.address, this.port);
@@ -149,6 +192,9 @@ public class ClientModel extends Observable implements Model {
 		} catch (IOException e) {connected = false;}
 	}
 	
+	/* (non-Javadoc)
+	 * @see model.Model#stop()
+	 */
 	@Override
 	public void stop() {
 		if(myServer != null){
@@ -163,6 +209,9 @@ public class ClientModel extends Observable implements Model {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Observable#notifyObservers(java.lang.Object)
+	 */
 	@Override
 	public void notifyObservers(Object arg) {
 		for (Observer observer : Observers) {
@@ -170,6 +219,9 @@ public class ClientModel extends Observable implements Model {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.util.Observable#addObserver(java.util.Observer)
+	 */
 	@Override
 	public synchronized void addObserver(Observer o) {
 		this.Observers.add(o);

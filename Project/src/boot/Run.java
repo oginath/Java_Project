@@ -1,11 +1,9 @@
 package boot;
-//
-//	By: Or Ginath 205928161
-//      
 import model.ClientModel;
 import presenter.Preferences;
 import presenter.Presenter;
 import view.View;
+
 
 public class Run {
 

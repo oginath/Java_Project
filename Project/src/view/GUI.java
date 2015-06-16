@@ -1,4 +1,4 @@
-package view.SWT;
+package view;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,33 +33,56 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import view.View;
-import view.CLI.MyCommands;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
-
 import commands.Command;
 
+/**
+ * The Class GUI. Inherits Basic Window, 
+ * This class contains the game board and offers 
+ * a graphical user interface. 
+ */
 public class GUI extends BasicWindow implements View {
 
-	/** The Observers of this class */
+	/**  The Observers of this class. */
 	private ArrayList<Observer> Observers;
+	
+	/** The Maze board, . */
 	MazeBoard md;
-	Maze maze;
+	
+	/** The toolbar menus. */
 	Menu menuBar, fileMenu, helpMenu;
+	
+	/** The toolbar menus headers. */
 	MenuItem fileHeader, helpHeader;
+	
+	/** The credits menus items. */
 	MenuItem exitItem, helpItem, creditsItem;
+	
+	/** The buttons. */
 	Button buttonNewGame, buttonLoadGame, buttonStopGame, buttonGetClue;
+	
+	/** The number of clues. Sets the number of clues the user can use in one game */
 	int clues;
+	
+	/** The Commands. */
 	private MyCommands cmds;
+	
+	/** The name of the current maze. */
 	String mazeName;
 	
+	/**
+	 * Instantiates the class.
+	 */
 	public GUI() {
 		super();
 		this.Observers = new ArrayList<Observer>();
 		this.cmds = new MyCommands();
 	}
 	
+	/**
+	 * Instantiates the window, lays out the widgets and the game board.
+	 */
 	@Override
 	public void initWidgets() {
 	
@@ -99,7 +122,7 @@ public class GUI extends BasicWindow implements View {
 		buttonNewGame.setText("New Game");
 		buttonNewGame.setLayoutData(new GridData(GridData.FILL, SWT.CENTER, false, false, 1, 1));
 		
-		md = new MazeBoard(shell, SWT.BORDER | SWT.DOUBLE_BUFFERED, null);
+		md = new MazeBoard(shell, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		md.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 4));
 		
 		buttonLoadGame = new Button(this.shell, SWT.PUSH);
@@ -424,34 +447,51 @@ public class GUI extends BasicWindow implements View {
 		});
 	}
 
+	/**
+	 * Opens the window, uses inherited method Run.
+	 * @see @class BasicWindow
+	 */
 	@Override
 	public void start() {
 		this.run();
-		
 	}
 
+	/**
+	 * Sets a new Command.
+	 * 
+	 * @param cmdName The name of the command.
+	 * @param cmd The Command.
+	 */
 	@Override
 	public void setCommands(String cmdName, Command cmd) {
 		this.cmds.setCommands(cmdName, cmd);
 	}
 
+	/**
+	 * Returns the latest command issued by the user.
+	 * 
+	 * @return The command
+	 */
 	@Override
 	public Command getUserCommand(String cmd) {	
 		return this.cmds.selectCommand(cmd);
 	}
-
+	
+	/**
+	 * No use for this method in this Class.
+	 */
 	@Override
-	public String getUserArg(String arg) {
-		return null;
-	}
+	public String getUserArg(String arg) {return null;}
 
+	/**
+	 * Starts the game with the maze that was recieved from the server.
+	 */
 	@Override
 	public void displayMaze(Maze m, String s) {	
-		this.maze = m;
 		if(m!= null){
 			shell.setMenuBar(null);
 			md.setPositions(s);
-			md.setMaze(maze);
+			md.setMaze(m);
 			md.start();
 			buttonNewGame.setEnabled(false);
 			buttonLoadGame.setEnabled(false);
@@ -463,11 +503,17 @@ public class GUI extends BasicWindow implements View {
 		}
 	}
 
+	/**
+	 * Inserts the solution that was recieved from the server to the game board.
+	 */
 	@Override
 	public void displaySolution(Solution s) {		
 		md.insertClue(s);
 	}
 	
+	/**
+	 * Displays a string describing an error.
+	 */
 	@Override
 	public void displayError(String err) {
 		Shell errShell = new Shell(shell);
@@ -493,7 +539,7 @@ public class GUI extends BasicWindow implements View {
 	 * Add Observer.
 	 * 
 	 * @param o
-	 *            adds an observer to this the observers list.
+	 *            adds the observer to this the observers list.
 	 */
 	@Override
 	public void addObserver(Observer o) {
@@ -503,24 +549,24 @@ public class GUI extends BasicWindow implements View {
 	/**
 	 * Delete Observer.
 	 * 
-	 * @param o
-	 *            Removes an observer from the observers list.
+	 * @param observer
+	 *            Removes the observer from the observers list.
 	 */
 	@Override
-	public void deleteObserver(Observer o) {
-		this.Observers.remove(o);
+	public void deleteObserver(Observer observer) {
+		this.Observers.remove(observer);
 	}
 
 	/**
 	 * Notify Observers.
-	 *
+	 * 
 	 * notify the observers.
+	 *
+	 * @param obj An object to pass to the observers.
 	 */
 	@Override
 	public void notifyObservers(Object obj) {
 		for (Observer observer : Observers)
 			observer.update(this, obj);
 	}
-
-
 }

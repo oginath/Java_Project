@@ -1,4 +1,4 @@
-package view.SWT;
+package view;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -46,35 +46,90 @@ import algorithms.mazeGenerators.Directions;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 
+/**
+ * The Class MazeBoard.
+ * Represent a game board of a maze.
+ * This class is quite complex. It 
+ * contains a consirable amount of 
+ * data members because of the need 
+ * to acssess them from different methods.
+ */
 public class MazeBoard extends Canvas implements GameBoard {
 
+	/** The Game Character. */
 	private GameCharacter gameChar;
+	
+	/** The current width and hieght. */
 	private int w, h;
-	private boolean flag = false;
-	private boolean stopped, won;
+	
+	private boolean flag = false, stopped, won;
+	
+	/** The Current player position. */
 	private int sX, sY;
+	
+	/** The Goal position (the Chest). */
 	private int gX, gY;
-	private Region region;
+	
+	/** The Radius of the circle surrounding the player. */
 	private int radius;
+	
+	/** The region used to set the circles. */
+	private Region region;
+	
+	/** The overlying shell, which contains the circles.*/
 	private Shell shell;
+	
+	/** Images of assets. */
 	private Image mazeTile, chest, totem;
+	
+	/** The Maze of this game session. */
 	private Maze mazeData;
+	
+	/** A key adapter. */
 	private KeyAdapter kAdapter;
+	
+	/** The Main Paint Listener. */
 	private PaintListener paintListener;
+	
+	/** Various listeners (private). */
 	private Listener moveListener, resizeListener, mouseListener, titleListener;
+	
+	/** A shell adapter. */
 	private ShellAdapter shellAdapter;
+	
+	/** Labels. */
 	private Label label, s1, s2;
+	
+	/** Sound clips. */
 	private Clip clip, cl;
+	
+	/** Time indicators. */
 	private long startTime, endTime;
+	
+	/** Lists of positions. Of totems and of clues.. */
 	private ArrayList<Point> totems, clue;
+	
+	/** Internal counters for number of totems and iteration of the music. */
 	int totcount, music;
+	
+	/** A hashmap that maps between a location in the maze and the equivalent position on the screen.*/
 	HashMap<Point, Point> map;
+	
+	/** A hashmap that maps between a position and the direction (horizontal or vertical) of the next position. */
 	HashMap<Point, String> clueMap;
 
-	public MazeBoard(Composite parent, int style, Maze mazeData) {
-
+	/**
+	 * Instantiates a new maze board.
+	 * Starts the title screen.
+	 *
+	 * @param parent The parent widget
+	 * @param style The SWT style
+	 * @param mazeData the maze data
+	 */
+	public MazeBoard(Composite parent, int style) {
+		
 		super(parent, style);
-		this.mazeData = mazeData;
+		this.mazeData = null;
 
 		chest = null;
 		mazeTile = null;
@@ -92,6 +147,11 @@ public class MazeBoard extends Canvas implements GameBoard {
 		TitleScreen();
 	}
 	
+	/**
+	 * Starts a new game.
+	 * Loads all the nesecassary 
+	 * 
+	 */
 	@Override
 	public void start() {
 
@@ -489,6 +549,11 @@ public class MazeBoard extends Canvas implements GameBoard {
 		getShell().setFocus();
 	}
 
+	/**
+	 * Move char.
+	 *
+	 * @param dir the dir
+	 */
 	@SuppressWarnings("incomplete-switch")
 	private void moveChar(Directions dir){
 		Point xy;
@@ -611,6 +676,12 @@ public class MazeBoard extends Canvas implements GameBoard {
 		redraw();
 	}
 	
+	/**
+	 * Change region.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 */
 	private void changeRegion(int x, int y) {
 		if (!shell.isDisposed()) {
 
@@ -632,6 +703,9 @@ public class MazeBoard extends Canvas implements GameBoard {
 
 	}
 
+	/**
+	 * Congrats.
+	 */
 	private void congrats() {
 		won = true;
 		redraw();
@@ -682,6 +756,9 @@ public class MazeBoard extends Canvas implements GameBoard {
 		stop();
 	}
 
+	/* (non-Javadoc)
+	 * @see view.SWT.GameBoard#stop()
+	 */
 	@Override
 	public void stop() {
 		if (!shell.isDisposed())
@@ -702,6 +779,9 @@ public class MazeBoard extends Canvas implements GameBoard {
 		stopped = true;
 	}
 
+	/**
+	 * Title screen.
+	 */
 	void TitleScreen() {
 
 		try {
@@ -823,6 +903,9 @@ public class MazeBoard extends Canvas implements GameBoard {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see view.SWT.GameBoard#insertClue(algorithms.search.Solution)
+	 */
 	@Override
 	public void insertClue(Solution sol) {
 		if (won)
@@ -860,22 +943,47 @@ public class MazeBoard extends Canvas implements GameBoard {
 		redraw();
 	}
 
+	/**
+	 * Sets the maze.
+	 *
+	 * @param m the new maze
+	 */
 	void setMaze(Maze m) {
 		this.mazeData = m;
 	}
 
+	/**
+	 * Checks if is stopped.
+	 *
+	 * @return true, if is stopped
+	 */
 	public boolean isStopped() {
 		return stopped;
 	}
 
+	/**
+	 * Checks if is won.
+	 *
+	 * @return true, if is won
+	 */
 	public boolean isWon() {
 		return won;
 	}
 
+	/**
+	 * Gets the clip.
+	 *
+	 * @return the clip
+	 */
 	public Clip getClip() {
 		return clip;
 	}
 
+	/**
+	 * Sets the positions.
+	 *
+	 * @param s the new positions
+	 */
 	public void setPositions(String s){
 		
 		String[] sp = s.split(" ");
@@ -886,14 +994,32 @@ public class MazeBoard extends Canvas implements GameBoard {
 		gY = Integer.parseInt(sp[3]);		
 	}
 	
+	/**
+	 * Gets the char posistion.
+	 *
+	 * @return the char posistion
+	 */
 	public String getCharPosistion() {
 		return sX + " " + sY;
 	}
 
+	/**
+	 * Gets the goal posistion.
+	 *
+	 * @return the goal posistion
+	 */
 	public String getGoalPosistion() {
 		return gX + " " + gY;
 	}
 
+	/**
+	 * Circle.
+	 *
+	 * @param r the r
+	 * @param offsetX the offset x
+	 * @param offsetY the offset y
+	 * @return the int[]
+	 */
 	private static int[] circle(int r, int offsetX, int offsetY) {
 		int[] polygon = new int[8 * r + 4];
 		// x^2 + y^2 = r^2

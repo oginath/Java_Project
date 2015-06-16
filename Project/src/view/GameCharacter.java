@@ -1,4 +1,4 @@
-package view.SWT;
+package view;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,11 +8,26 @@ import org.eclipse.swt.graphics.Image;
 
 import algorithms.mazeGenerators.Directions;
 
+/**
+ * The Class GameCharacter.
+ */
 class GameCharacter {
+	
+	/** The current position of the character. */
 	int x, y;
+	
+	/** Images of the character. */
 	Image spelunkyDown, spelunkyUp, spelunkyLeft, spelunkyRight;
+	
+	/** The direction the character is faceing. */
 	Directions dir;
 	
+	/**
+	 * Instantiates a new game character.
+	 *
+	 * @param x The x position 
+	 * @param y The y position
+	 */
 	public GameCharacter(int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -26,6 +41,13 @@ class GameCharacter {
 		}
 	}
 	
+	/**
+	 * Draw the character.
+	 *
+	 * @param gc The graphical component to draw with.
+	 * @param w The current width to draw the character with
+	 * @param h The current hieght to draw the character with
+	 */
 	public void paint(GC gc, int w, int h) {
 
 		switch (dir) {

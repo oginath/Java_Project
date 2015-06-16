@@ -10,6 +10,7 @@ import algorithms.search.Solution;
 
 import commands.Command;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Presenter.
  */
@@ -21,6 +22,7 @@ public class Presenter implements Observer {
 	/** The View. */
 	View v;
 	
+	/** The latest maze. */
 	String latestMaze;
 
 
